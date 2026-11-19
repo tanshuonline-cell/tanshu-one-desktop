@@ -76,7 +76,7 @@ jobs:
           if ($null -eq $identity) { throw 'Manifest Identity element is missing.' }
           $identity.SetAttribute('Name', $env:MSIX_PACKAGE_NAME)
           $identity.SetAttribute('Publisher', $env:MSIX_PUBLISHER)
-          $identity.SetAttribute('Version', '0.1.0.0')
+          $identity.SetAttribute('Version', '0.1.1.0')
 
           $properties = $xml.SelectSingleNode("//*[local-name()='Properties']")
           if ($null -eq $properties) { throw 'Manifest Properties element is missing.' }
@@ -132,7 +132,7 @@ jobs:
       - name: Package unsigned MSIX for Store submission
         shell: pwsh
         run: |
-          $output = Join-Path $PWD 'TANSHU-ONLINE_0.1.0.0_x64.msix'
+          $output = Join-Path $PWD 'TANSHU-ONLINE_0.1.1.0_x64.msix'
           winapp pack (Join-Path $PWD 'msix-staging') --no-sign --output $output --executable tanshu-one.exe
           if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed (exit $LASTEXITCODE)." }
           if (!(Test-Path $output)) { throw 'MSIX output file was not created.' }
@@ -141,6 +141,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TANSHU-ONLINE-MSIX-Store
-          path: TANSHU-ONLINE_0.1.0.0_x64.msix
+          path: TANSHU-ONLINE_0.1.1.0_x64.msix
           if-no-files-found: error
           retention-days: 30
