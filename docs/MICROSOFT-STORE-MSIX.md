@@ -2,21 +2,36 @@
 
 This branch adds a separate Windows MSIX packaging workflow. It does not replace or modify the existing NSIS/MSI release workflow.
 
-## Required repository variables
+## Partner Center identity values
 
-Before running **Actions → Windows MSIX (Microsoft Store) → Run workflow**, add these repository variables under **Settings → Secrets and variables → Actions → Variables**:
+Open Partner Center and locate the **Product identity** page for the MSIX product. Copy these exact public values:
 
-- `MSIX_PACKAGE_NAME`: exact **Package/Identity/Name** from Partner Center → TANSHU ONE → Product management → Product identity.
-- `MSIX_PUBLISHER`: exact **Package/Identity/Publisher** from the same page (copy the complete distinguished name, including `CN=`).
-- `MSIX_PUBLISHER_DISPLAY_NAME`: exact publisher display name associated with the Store account.
+- **Package/Identity/Name** → workflow input `package_name`
+- **Package/Identity/Publisher** → workflow input `publisher` (include the full `CN=` distinguished name)
+- **Publisher display name** → workflow input `publisher_display_name`
 
-These are public package identity values, not passwords or private keys. Do not guess them: the package identity and publisher must match Partner Center exactly.
+Do not guess or shorten these values. They must match the MSIX product identity in Partner Center exactly. These are public identity strings, not passwords or private keys.
 
-The workflow builds the Tauri executable, creates a manifest using WinApp CLI, substitutes the exact Store identity values, and packages an **unsigned** x64 MSIX. Microsoft Store signs accepted MSIX packages. The unsigned artifact is for Store upload, not for direct sideload installation.
+You can enter them directly when running the workflow, so you do not need to configure GitHub repository variables. Alternatively, configure repository variables named `MSIX_PACKAGE_NAME`, `MSIX_PUBLISHER`, and `MSIX_PUBLISHER_DISPLAY_NAME`; workflow inputs take precedence over variables.
 
-## Important
+## Run the workflow
 
-- The current Tauri app version is 0.1.0. A Store package version must be four numeric components, so this workflow uses 0.1.0.0.
-- The workflow is intentionally separate from the existing EXE/MSI packaging.
-- A successful workflow run is only a packaging result. Partner Center package validation and Store certification are still required.
-- Before production submission, review the generated manifest's capabilities, visual assets, executable entry point, and app behavior. Do not submit until those checks pass.
+1. Open the repository on GitHub.
+2. Select **Actions** → **Windows MSIX (Microsoft Store)**.
+3. Select **Run workflow**.
+4. Enter the three identity values above and start the run.
+5. When the run succeeds, download the `TANSHU-ONE-MSIX-Store` artifact.
+
+The workflow builds the Tauri executable without generating the existing NSIS/MSI installers, initializes the manifest with Microsoft WinApp CLI, checks the desktop full-trust capability, and packages an **unsigned** x64 MSIX. Microsoft Store signs accepted MSIX packages. The unsigned artifact is for Store upload, not for direct sideload installation.
+
+## Important Partner Center product-type distinction
+
+The current reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. Microsoft documents EXE/MSI and MSIX as separate product submission paths and says the EXE/MSI package page accepts an EXE or MSI installer URL, whereas the MSIX package page accepts MSIX/AppX package files. Do **not** upload this MSIX to the existing EXE/MSI submission. Before creating another listing, check whether the existing reservation can be cancelled/released and whether the same name can be reserved under **MSIX/PWA**. Do not delete or cancel the existing reservation until the name-reuse path is confirmed.
+
+## Validation status
+
+- The workflow definition is committed on the `feature/msix-store-package` branch.
+- A successful GitHub Actions run is still required to prove the build and packaging steps work.
+- Partner Center package validation and Store certification are separate steps.
+- Before submission, inspect the generated manifest's capabilities, visual assets, executable entry point, and app behavior. Do not submit until those checks pass.
+- The package version is currently `0.1.0.0`, derived from the app version `0.1.0`.
