@@ -4,7 +4,7 @@ This branch adds a separate Windows MSIX packaging workflow. It does not replace
 
 ## Partner Center identity values
 
-Open Partner Center and locate the **Product identity** page for the MSIX product. Copy these exact public values:
+First reserve **TANSHU ONLINE** as an **MSIX or PWA app** in Partner Center. A green availability check means the name is available; complete the **Reserve product name** action to secure it. Then open the new product's **Product identity** page and copy these exact public values:
 
 - **Package/Identity/Name** → workflow input `package_name`
 - **Package/Identity/Publisher** → workflow input `publisher` (include the full `CN=` distinguished name)
@@ -20,13 +20,13 @@ You can enter them directly when running the workflow, so you do not need to con
 2. Select **Actions** → **Windows MSIX (Microsoft Store)**.
 3. Select **Run workflow**.
 4. Enter the three identity values above and start the run.
-5. When the run succeeds, download the `TANSHU-ONE-MSIX-Store` artifact.
+5. When the run succeeds, download the `TANSHU-ONLINE-MSIX-Store` artifact.
 
 The workflow builds the Tauri executable without generating the existing NSIS/MSI installers, initializes the manifest with Microsoft WinApp CLI, checks the desktop full-trust capability, and packages an **unsigned** x64 MSIX. Microsoft Store signs accepted MSIX packages. The unsigned artifact is for Store upload, not for direct sideload installation.
 
 ## Important Partner Center product-type distinction
 
-The current reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. Microsoft documents EXE/MSI and MSIX as separate product submission paths and says the EXE/MSI package page accepts an EXE or MSI installer URL, whereas the MSIX package page accepts MSIX/AppX package files. Do **not** upload this MSIX to the existing EXE/MSI submission. Microsoft provides separate **MSIX or PWA app** and **EXE or MSI app** choices when creating a product. The documented Partner Center control for an unsubmitted EXE/MSI draft is **Application overview → App setup card → ⋯ → Delete**; this deletes the draft and all its information. Only after you are certain you want to abandon the EXE/MSI draft, delete it, return to **Apps and games → New product → MSIX or PWA app**, and check whether `TANSHU ONE` is available to reserve again. If it is not available, stop and do not reserve a different name without deciding the branding first. Deleting the draft is irreversible for the draft's saved information.
+The existing reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. Microsoft documents EXE/MSI and MSIX as separate product submission paths. Do **not** upload this MSIX to the existing EXE/MSI submission. Keep the TANSHU ONE draft intact while creating the separate **TANSHU ONLINE** MSIX product. Do not delete the old draft unless you later decide to abandon it knowingly.
 
 ## Validation status
 
