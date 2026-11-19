@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { ArrowLeft, Download, Printer, Plus, Trash2, Image as ImageIcon, ShieldCheck, CreditCard, FileText, BriefcaseBusiness, Calculator, GraduationCap, Languages, WalletCards, Grid2X2 } from "lucide-react";
+import { ArrowLeft, Download, Plus, Trash2, Image as ImageIcon, ShieldCheck, CreditCard, FileText, BriefcaseBusiness, Calculator, GraduationCap, Languages, WalletCards, Grid2X2 } from "lucide-react";
 import "./ToolWorkspaces.css";
 
 type Props={moduleName:string;onBack:()=>void};
