@@ -95,7 +95,7 @@ function App() {
           <button className="nav-link" onClick={() => setShowHelp(true)}><LifeBuoy size={18}/><span>{sidebarOpen ? "Help & support" : ""}</span></button>
           <button className="nav-link" onClick={() => setActiveNav("Settings")}><Settings2 size={18}/><span>{sidebarOpen ? "Settings" : ""}</span></button>
           {sidebarOpen && <div className="offline-card"><div className="offline-indicator"><span/> Offline-ready</div><p>Your workspace is designed to work on this device.</p><div className="offline-foot"><ShieldCheck size={14}/> Your files stay local</div></div>}
-          {sidebarOpen && <div className="sidebar-version">TANSHU ONE <span>v0.1.0 · Preview</span></div>}
+          {sidebarOpen && <div className="sidebar-version">TANSHU ONLINE <span>v0.1.0 · Preview</span></div>}
         </div>
       </aside>
 
@@ -114,16 +114,16 @@ function App() {
             <section className="module-placeholder">
               <button className="back-link" onClick={() => setSelectedModule(null)}>← Back to workspace</button>
               <div className={`module-hero-icon tone-${selected?.tone ?? "cyan"}`}>{selected && <selected.icon size={30}/>}</div>
-              <div className="eyebrow">TANSHU ONE TOOL</div>
+              <div className="eyebrow">TANSHU ONLINE TOOL</div>
               <h1>{selectedModule}</h1>
-              <p className="module-lead">{selected?.description}. This workspace is planned and will be built as part of TANSHU ONE.</p>
+              <p className="module-lead">{selected?.description}. This workspace is planned and will be built as part of TANSHU ONLINE.</p>
               <div className="coming-soon-panel"><Sparkles size={19}/><div><strong>Workspace foundation</strong><p>The desktop shell is ready. The full tool workflow will be added in the next development phase.</p></div></div>
               <button className="button-primary" onClick={() => setSelectedModule(null)}>Return to dashboard <ArrowUpRight size={16}/></button>
             </section>
           ) : activeNav === "Settings" ? (
-            <section className="module-placeholder"><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p className="module-lead">Application preferences, local storage and privacy controls will live here.</p><div className="coming-soon-panel"><ShieldCheck size={19}/><div><strong>Privacy by design</strong><p>TANSHU ONE is being designed as an independent, local-first desktop application.</p></div></div></section>
+            <section className="module-placeholder"><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p className="module-lead">Application preferences, local storage and privacy controls will live here.</p><div className="coming-soon-panel"><ShieldCheck size={19}/><div><strong>Privacy by design</strong><p>TANSHU ONLINE is being designed as an independent, local-first desktop application.</p></div></div></section>
           ) : activeNav === "My projects" ? (
-            <section className="module-placeholder"><div className="eyebrow">YOUR WORK</div><h1>My projects</h1><p className="module-lead">Your saved TANSHU ONE projects will appear here.</p><div className="empty-projects"><FolderOpen size={30}/><strong>No projects yet</strong><span>Start with a tool to create your first project.</span><button className="button-primary" onClick={() => setActiveNav("All tools")}>Explore tools <ArrowUpRight size={16}/></button></div></section>
+            <section className="module-placeholder"><div className="eyebrow">YOUR WORK</div><h1>My projects</h1><p className="module-lead">Your saved TANSHU ONLINE projects will appear here.</p><div className="empty-projects"><FolderOpen size={30}/><strong>No projects yet</strong><span>Start with a tool to create your first project.</span><button className="button-primary" onClick={() => setActiveNav("All tools")}>Explore tools <ArrowUpRight size={16}/></button></div></section>
           ) : (
             <>
               <section className="welcome-row">
@@ -158,12 +158,12 @@ function App() {
                 {filteredModules.length === 0 && <div className="no-results">No tools match “{query}”. Try another search.</div>}
               </section>
 
-              <footer className="page-footer"><span>© 2026 TANSHU ONE</span><span><ShieldCheck size={13}/> Independent · Offline-first · Local by design</span></footer>
+              <footer className="page-footer"><span>© 2026 TANSHU ONLINE</span><span><ShieldCheck size={13}/> Independent · Offline-first · Local by design</span></footer>
             </>
           )}
         </div>
       </main>
-      {showHelp && <div className="modal-backdrop" onClick={() => setShowHelp(false)}><section className="help-modal" onClick={(event) => event.stopPropagation()}><button className="icon-button modal-close" onClick={() => setShowHelp(false)} aria-label="Close"><X size={18}/></button><div className="help-icon"><MessageCircle size={23}/></div><div className="eyebrow">TANSHU ONE</div><h2>How can we help?</h2><p>This is the first desktop workspace preview. More help content will be added as tools are implemented.</p><div className="help-note"><HardDrive size={17}/> Core tools are being designed to work locally on your PC.</div><button className="button-primary" onClick={() => setShowHelp(false)}>Got it</button></section></div>}
+      {showHelp && <div className="modal-backdrop" onClick={() => setShowHelp(false)}><section className="help-modal" onClick={(event) => event.stopPropagation()}><button className="icon-button modal-close" onClick={() => setShowHelp(false)} aria-label="Close"><X size={18}/></button><div className="help-icon"><MessageCircle size={23}/></div><div className="eyebrow">TANSHU ONLINE</div><h2>How can we help?</h2><p>This is the first desktop workspace preview. More help content will be added as tools are implemented.</p><div className="help-note"><HardDrive size={17}/> Core tools are being designed to work locally on your PC.</div><button className="button-primary" onClick={() => setShowHelp(false)}>Got it</button></section></div>}
     </div>
   );
 }
