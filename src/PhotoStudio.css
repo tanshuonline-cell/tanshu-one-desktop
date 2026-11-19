@@ -220,7 +220,7 @@
 .ps-quick-tools button:first-of-type{background:#2b75a9;color:#fff;border:1px solid #4697ce;box-shadow:0 3px 12px #0005}
 .ps-quick-tools button:first-of-type:hover{background:#378bc2}
 .ps-crop-overlay{position:absolute;z-index:40;touch-action:none;cursor:crosshair;outline:1px dashed rgba(255,190,90,.9);background:rgba(0,0,0,.08)}
-.ps-crop-selection{position:absolute;box-sizing:border-box;border:2px solid #f4b84f;background:rgba(244,184,79,.09);cursor:move;touch-action:none;box-shadow:0 0 0 9999px rgba(0,0,0,.26)}
+.ps-crop-selection{position:absolute;pointer-events:auto;box-sizing:border-box;border:2px solid #f4b84f;background:rgba(244,184,79,.09);cursor:move;touch-action:none;box-shadow:0 0 0 9999px rgba(0,0,0,.26)}
 .ps-crop-selection>span{position:absolute;left:5px;top:5px;padding:3px 5px;background:#171513d9;color:#fff3dc;font-size:9px;white-space:nowrap;pointer-events:none}
 .ps-crop-handle{position:absolute;width:11px;height:11px;border:2px solid #fff;background:#e7a43f;border-radius:50%;box-shadow:0 1px 5px #0009;touch-action:none}
 .ps-crop-handle.nw{left:-6px;top:-6px;cursor:nwse-resize}
