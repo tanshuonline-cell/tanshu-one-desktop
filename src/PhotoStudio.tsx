@@ -98,7 +98,7 @@ export default function PhotoStudio({onBack}:{onBack:()=>void}) {
    <span className="ps-actions-spacer"/>
    <button className="ps-tool ps-right-action" onClick={()=>setSaveOpen(true)} title="Save output"><Save size={16}/><span>Save</span></button>
    <button className="ps-tool ps-right-action" onClick={openPrintPreview} title="Print preview"><Printer size={16}/><span>Print</span></button>
-   <button className="ps-export" onClick={exportPage} title="Export PNG"><Download size={15}/><span>Export PNG</span></button>
+   <button className="ps-export" onClick={()=>exportPage("PNG")} title="Export PNG"><Download size={15}/><span>Export PNG</span></button>
   </div>
   <input ref={projectRef} hidden type="file" accept=".json,application/json" onChange={e=>loadProject(e.target.files?.[0])}/>
   <input ref={fileRef} hidden type="file" accept="image/*" multiple onChange={e=>{if(importAsSignature){addSignature(e.target.files?.[0]);setImportAsSignature(false);}else addImage(e.target.files);}}/>
