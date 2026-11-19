@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDown, ArrowLeft, ArrowUp, ChevronDown, ChevronLeft,
   ChevronRight, Crop, Download, Eye, EyeOff, Hand, ImagePlus, Layers3,
@@ -102,6 +102,34 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
     const a = document.createElement("a"); a.download = `tanshu-one-page-${page.id}.png`; a.href = canvas.toDataURL("image/png"); a.click();
   };
   const pageScale = useMemo(() => zoom / 100, [zoom]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable)) return;
+      const command = event.ctrlKey || event.metaKey;
+      if (command && event.key.toLowerCase() === "d" && selected) {
+        event.preventDefault();
+        const copy = { ...selected, id: uid(), name: `${selected.name} copy`, x: selected.x + 24, y: selected.y + 24 };
+        setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, copy] } : p));
+        setSelectedId(copy.id);
+      } else if ((event.key === "Delete" || event.key === "Backspace") && selected) {
+        event.preventDefault();
+        setPages(old => old.map(p => p.id === pageId ? { ...p, layers: p.layers.filter(l => l.id !== selected.id) } : p));
+        setSelectedId(null);
+      } else if (event.key === "Escape") {
+        setSelectedId(null);
+      } else if (command && (event.key === "+" || event.key === "=")) {
+        event.preventDefault(); setZoom(z => Math.min(150, z + 5));
+      } else if (command && event.key === "-") {
+        event.preventDefault(); setZoom(z => Math.max(10, z - 5));
+      } else if (command && event.key === "]" && selected) {
+        event.preventDefault(); patchLayer(selected.id, { rotation: selected.rotation + 90 });
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selected, pageId]);
 
   return <div className="photo-studio">
     <header className="ps-topbar">
