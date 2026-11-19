@@ -266,3 +266,12 @@
 .ps-new-photo-select{min-width:104px;border-color:#8a6138;background:#3b2b1e;color:#ffe0b5}
 .ps-new-photo-select:focus,.ps-count-control input:focus{outline:1px solid #e0a85c;outline-offset:1px}
 @media(max-width:760px){.ps-count-control{height:30px;padding:0 5px;font-size:8px}.ps-count-control input{width:36px;height:23px}.ps-new-photo-select{min-width:94px}}
+
+
+/* Precise photo-to-photo magnetic alignment and per-photo delete controls */
+.ps-layer-delete-mark{position:absolute!important;z-index:30;right:3px;top:3px;width:25px;height:25px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.72);border-radius:50%;background:#b4232d;color:#fff;cursor:pointer;transform-origin:top right;box-shadow:0 2px 8px #0008;transition:background .16s ease,box-shadow .16s ease}
+.ps-layer-delete-mark:hover{background:#e11d32;box-shadow:0 0 0 3px #ef444455,0 3px 10px #0009}
+.ps-layer-delete-mark svg{overflow:visible}
+.ps-layer-delete-mark:hover svg{animation:ps-bin-lid-wiggle .42s ease-in-out infinite alternate}
+@keyframes ps-bin-lid-wiggle{from{transform:rotate(-12deg) translateY(-1px)}to{transform:rotate(12deg) translateY(-2px)}}
+.ps-quick-tools button.active[title^="Toggle delete"]{background:#61282b;border-color:#e16b70;color:#fff}
