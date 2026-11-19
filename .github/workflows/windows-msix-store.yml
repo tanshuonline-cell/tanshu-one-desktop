@@ -1,6 +1,8 @@
 name: Windows MSIX (Microsoft Store)
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       package_name:
@@ -23,9 +25,9 @@ jobs:
   build-msix:
     runs-on: windows-latest
     env:
-      MSIX_PACKAGE_NAME: ${{ inputs.package_name || vars.MSIX_PACKAGE_NAME }}
-      MSIX_PUBLISHER: ${{ inputs.publisher || vars.MSIX_PUBLISHER }}
-      MSIX_PUBLISHER_DISPLAY_NAME: ${{ inputs.publisher_display_name || vars.MSIX_PUBLISHER_DISPLAY_NAME }}
+      MSIX_PACKAGE_NAME: ${{ inputs.package_name || vars.MSIX_PACKAGE_NAME || 'TANSHUONLINE.TANSHUONLINE' }}
+      MSIX_PUBLISHER: ${{ inputs.publisher || vars.MSIX_PUBLISHER || 'CN=97E8C1D7-E167-450A-BBE1-93A3DE4AEFA1' }}
+      MSIX_PUBLISHER_DISPLAY_NAME: ${{ inputs.publisher_display_name || vars.MSIX_PUBLISHER_DISPLAY_NAME || 'TANSHU ONLINE' }}
     steps:
       - name: Check Store identity configuration
         shell: pwsh
