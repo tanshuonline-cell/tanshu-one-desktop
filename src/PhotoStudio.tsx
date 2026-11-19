@@ -15,7 +15,7 @@ type Layer = {
 type StudioPage = { id: number; name: string; size: string; width: number; height: number; layers: Layer[] };
 
 const makePage = (id: number): StudioPage => ({
-  id, name: `Page ${id}`, size: "4 × 6 in", width: 600, height: 900, layers: []
+  id, name: `Page ${id}`, size: "4 × 6 in", width: 1200, height: 1800, layers: []
 });
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -24,10 +24,10 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
   const [pageId, setPageId] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [tool, setTool] = useState("select");
-  const [zoom, setZoom] = useState(62);
+  const [zoom, setZoom] = useState(35);
   const [showPages, setShowPages] = useState(true);
   const [showLayers, setShowLayers] = useState(true);
-  const [drag, setDrag] = useState<{ id: string; x: number; y: number; ox: number; oy: number } | null>(null);
+  const [drag, setDrag] = useState<{ id: string; x: number; y: number; ox: number; oy: number; ow: number; oh: number; mode: "move" | "resize"; handle?: string } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const page = pages.find(p => p.id === pageId) ?? pages[0];
   const selected = page.layers.find(l => l.id === selectedId) ?? null;
@@ -53,7 +53,7 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
     setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, layer] } : p));
     setSelectedId(layer.id);
   };
-  const addPage = () => {
+  const changePageSize = (size: string) => {\n    const presets: Record<string, { width: number; height: number }> = { "4 × 6 in": { width: 1200, height: 1800 }, "A4": { width: 2480, height: 3508 }, "35 × 45 mm": { width: 413, height: 531 }, "PAN 25 × 35 mm": { width: 295, height: 413 }, "Letter": { width: 2550, height: 3300 } };\n    const dimensions = presets[size]; if (!dimensions) return;\n    setPages(old => old.map(p => p.id === pageId ? { ...p, size, ...dimensions } : p));\n    setZoom(size === "35 × 45 mm" || size === "PAN 25 × 35 mm" ? 90 : size === "4 × 6 in" ? 35 : 20);\n  };\n  const addPage = () => {
     const next = Math.max(...pages.map(p => p.id)) + 1;
     setPages(old => [...old, makePage(next)]);
     setPageId(next); setSelectedId(null);
@@ -129,7 +129,7 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
         <button className="ps-tool" onClick={() => selected && patchLayer(selected.id, { rotation: selected.rotation + 90 })} disabled={!selected}><RotateCw size={16}/><span>Rotate 90°</span></button>
         <button className="ps-tool" onClick={removeSelected} disabled={!selected}><Trash2 size={16}/><span>Delete</span></button>
       </div>
-      <div className="ps-zoom"><button onClick={() => setZoom(z => Math.max(25, z - 5))}><Minus size={14}/></button><span>{zoom}%</span><button onClick={() => setZoom(z => Math.min(125, z + 5))}><Plus size={14}/></button></div>
+      <div className="ps-page-size"><span>PAGE</span><select value={page.size} onChange={e => changePageSize(e.target.value)}><option>4 × 6 in</option><option>A4</option><option>35 × 45 mm</option><option>PAN 25 × 35 mm</option><option>Letter</option></select></div>\n      <div className="ps-zoom"><button onClick={() => setZoom(z => Math.max(10, z - 5))}><Minus size={14}/></button><span>{zoom}%</span><button onClick={() => setZoom(z => Math.min(125, z + 5))}><Plus size={14}/></button></div>
     </div>
     <div className="ps-body">
       {showPages && <aside className="ps-left-panel">
@@ -140,7 +140,7 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
       </aside>}
       <section className="ps-workspace">
         <div className="ps-canvas-ruler ps-ruler-top"><span>0</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>600 px</span></div>
-        <div className="ps-canvas-scroll">
+        <div className="ps-canvas-scroll" onWheel={e => { if (e.ctrlKey || e.metaKey) { e.preventDefault(); setZoom(z => Math.max(10, Math.min(150, z + (e.deltaY < 0 ? 5 : -5)))); } }}>
           <div className="ps-paper-wrap" style={{ width: page.width * pageScale, height: page.height * pageScale }}>
             <div className="ps-paper" style={{ width: page.width, height: page.height, transform: `scale(${pageScale})` }}>
               {page.layers.filter(l => l.visible).map(layer => <div key={layer.id}
@@ -150,13 +150,13 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
                 onPointerMove={e => { if (!drag || drag.id !== layer.id) return; patchLayer(layer.id, { x: Math.max(0, Math.min(page.width - layer.width, drag.ox + (e.clientX - drag.x) / pageScale)), y: Math.max(0, Math.min(page.height - layer.height, drag.oy + (e.clientY - drag.y) / pageScale)) }); }}
                 onPointerUp={() => setDrag(null)}>
                 {layer.kind === "image" ? <img src={layer.src} draggable={false} alt={layer.name}/> : <span>{layer.text}</span>}
-                {selectedId === layer.id && <><i className="ps-handle nw"/><i className="ps-handle ne"/><i className="ps-handle sw"/><i className="ps-handle se"/></>}
+                {selectedId === layer.id && ["nw","ne","sw","se"].map(handle => <i key={handle} className={`ps-handle ${handle}`} onPointerDown={e => { e.stopPropagation(); setDrag({ id: layer.id, x: e.clientX, y: e.clientY, ox: layer.x, oy: layer.y, ow: layer.width, oh: layer.height, mode: "resize", handle }); (e.currentTarget.parentElement as HTMLElement).setPointerCapture(e.pointerId); }}/>) }
               </div>)}
               {page.layers.length === 0 && <div className="ps-empty-page"><div className="ps-empty-icon"><ImagePlus size={24}/></div><strong>Your canvas is ready</strong><span>Import a photo or add a text layer to get started.</span><button onClick={() => fileRef.current?.click()}>Import photo</button></div>}
             </div>
           </div>
         </div>
-        <div className="ps-workspace-footer"><span>{page.name} · {page.size}</span><span>{page.width} × {page.height} px · 300 DPI target</span><span className="ps-footer-zoom"><button onClick={() => setZoom(z => Math.max(25,z-5))}><ZoomOut size={14}/></button>{zoom}%<button onClick={() => setZoom(z => Math.min(125,z+5))}><ZoomIn size={14}/></button></span></div>
+        <div className="ps-workspace-footer"><span>{page.name} · {page.size}</span><span>{page.width} × {page.height} px · 300 DPI</span><span className="ps-footer-zoom"><button onClick={() => setZoom(z => Math.max(25,z-5))}><ZoomOut size={14}/></button>{zoom}%<button onClick={() => setZoom(z => Math.min(125,z+5))}><ZoomIn size={14}/></button></span></div>
       </section>
       {showLayers && <aside className="ps-right-panel">
         <div className="ps-right-scroll">
@@ -164,7 +164,7 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
           {selected ? <>
             <div className="ps-property-title"><span className={`ps-property-icon ${selected.kind}`}>{selected.kind === "image" ? <ImagePlus size={15}/> : <Type size={15}/>}</span><div><strong>{selected.name}</strong><small>{selected.kind === "image" ? "Image layer" : "Text layer"}</small></div></div>
             <div className="ps-prop-section"><div className="ps-section-label">LAYER TRANSFORM</div>
-              <label className="ps-slider-row"><span>Scale</span><strong>{Math.round(selected.width / 3)}%</strong><input className="ps-slider scale" type="range" min="30" max="600" value={Math.round(selected.width / 3)} onChange={e => patchLayer(selected.id,{width:Number(e.target.value)*3,height:Math.round(Number(e.target.value)*3*1.2)})}/></label>
+              <label className="ps-slider-row"><span>Scale</span><strong>{Math.round(selected.width / 3)}%</strong><input className="ps-slider scale" type="range" min="10" max="1000" value={Math.round(selected.width / 3)} onChange={e => patchLayer(selected.id,{width:Number(e.target.value)*3})}/></label>
               <label className="ps-slider-row"><span>Rotation</span><strong>{selected.rotation}°</strong><input className="ps-slider rotation" type="range" min="-180" max="180" value={selected.rotation} onChange={e => patchLayer(selected.id,{rotation:Number(e.target.value)})}/></label>
               <label className="ps-slider-row"><span>Opacity</span><strong>{selected.opacity}%</strong><input className="ps-slider opacity" type="range" min="0" max="100" value={selected.opacity} onChange={e => patchLayer(selected.id,{opacity:Number(e.target.value)})}/></label>
             </div>
@@ -177,6 +177,6 @@ export default function PhotoStudio({ onBack }: { onBack: () => void }) {
         </div>
       </aside>}
     </div>
-    <footer className="ps-bottom-bar"><span><span className="ps-green-dot"/> All changes are in this session</span><span>Drag layers to position · Ctrl + scroll to zoom (planned)</span><button onClick={()=>setShowPages(v=>!v)}>{showPages?<ChevronLeft size={14}/>:<ChevronRight size={14}/>} Pages</button><button onClick={()=>setShowLayers(v=>!v)}>Layers <ChevronDown size={14}/></button></footer>
+    <footer className="ps-bottom-bar"><span><span className="ps-green-dot"/> All changes are in this session</span><span>Drag layers to position · Drag corner handles to resize · Ctrl + wheel to zoom</span><button onClick={()=>setShowPages(v=>!v)}>{showPages?<ChevronLeft size={14}/>:<ChevronRight size={14}/>} Pages</button><button onClick={()=>setShowLayers(v=>!v)}>Layers <ChevronDown size={14}/></button></footer>
   </div>;
 }
