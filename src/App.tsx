@@ -1,3 +1,4 @@
+import PhotoStudio from "./PhotoStudio";
 import { useMemo, useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
@@ -103,7 +104,7 @@ function App() {
         </header>
 
         <div className="page-content">
-          {selectedModule ? (
+          {selectedModule === "Photo Studio" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
             <section className="module-placeholder">
               <button className="back-link" onClick={() => setSelectedModule(null)}>← Back to workspace</button>
               <div className={`module-hero-icon tone-${selected?.tone ?? "cyan"}`}>{selected && <selected.icon size={30}/>}</div>
