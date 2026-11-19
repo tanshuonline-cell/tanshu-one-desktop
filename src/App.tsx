@@ -1,4 +1,5 @@
 import PhotoStudio from "./PhotoStudio";
+import brandAvatar from "./assets/tanshu-online-dp.jpg";
 import PDFMaster from "./PDFMaster";
 import ToolWorkspaces from "./ToolWorkspaces";
 import { useMemo, useState } from "react";
@@ -64,14 +65,14 @@ function App() {
     <div className="app-shell">
       <aside className={`sidebar ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
         <div className="brand-lockup">
-          <div className="brand-mark"><Command size={22} strokeWidth={2.2} /></div>
-          {sidebarOpen && <div className="brand-copy"><strong>TANSHU<span> ONE</span></strong><small>DESKTOP WORKSPACE</small></div>}
+          <img className="brand-avatar" src={brandAvatar} alt="TANSHU ONLINE" />
+          {sidebarOpen && <div className="brand-copy"><strong>TANSHU<span> ONLINE</span></strong><small>DESKTOP WORKSPACE</small></div>}
           <button className="icon-button sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Toggle sidebar">
             {sidebarOpen ? <PanelLeftClose size={17} /> : <Menu size={18} />}
           </button>
         </div>
 
-        {sidebarOpen && <div className="workspace-switch"><div className="workspace-avatar">T</div><div><strong>My Workspace</strong><small>Local device</small></div><ChevronDown size={15} /></div>}
+        {sidebarOpen && <div className="workspace-switch"><img className="workspace-avatar workspace-avatar-photo" src={brandAvatar} alt="" /><div><strong>My Workspace</strong><small>Local device</small></div><ChevronDown size={15} /></div>}
 
         <div className="nav-caption">{sidebarOpen ? "WORKSPACE" : ""}</div>
         <nav className="primary-nav">
@@ -105,7 +106,7 @@ function App() {
           <div className="topbar-actions">
             <div className="system-status"><span className="status-dot"/> Local workspace</div>
             <button className="icon-button help-button" onClick={() => setShowHelp(true)} aria-label="Help"><CircleHelp size={18}/></button>
-            <div className="profile-chip"><div className="profile-avatar">T</div><ChevronDown size={14}/></div>
+            <div className="profile-chip"><img className="profile-avatar profile-avatar-photo" src={brandAvatar} alt="TANSHU ONLINE profile" /><ChevronDown size={14}/></div>
           </div>
         </header>
 
