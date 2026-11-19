@@ -1,0 +1,110 @@
+name: Windows MSIX (Microsoft Store)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-msix:
+    runs-on: windows-latest
+    env:
+      MSIX_PACKAGE_NAME: ${{ vars.MSIX_PACKAGE_NAME }}
+      MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+      MSIX_PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME }}
+    steps:
+      - name: Check Store identity configuration
+        shell: pwsh
+        run: |
+          $required = @('MSIX_PACKAGE_NAME', 'MSIX_PUBLISHER', 'MSIX_PUBLISHER_DISPLAY_NAME')
+          foreach ($name in $required) {
+            if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) {
+              throw "Missing GitHub repository variable: $name. Copy the exact value from Partner Center > Product management > Product identity."
+            }
+          }
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install WinApp CLI
+        shell: pwsh
+        run: |
+          winget install --id Microsoft.winappcli --exact --source winget --silent --accept-source-agreements --accept-package-agreements
+          if ($LASTEXITCODE -ne 0) { throw "WinApp CLI installation failed (exit $LASTEXITCODE)." }
+          $env:PATH += ";$env:LOCALAPPDATA\Microsoft\WinGet\Links"
+          "PATH=$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          winapp --version
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build Tauri executable only
+        run: npm run tauri -- build --bundles none
+
+      - name: Stage app and create MSIX manifest
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD 'src-tauri/target/release/tanshu-one.exe'
+          if (!(Test-Path $exe)) { throw "Expected Tauri executable not found: $exe" }
+
+          $stage = Join-Path $PWD 'msix-staging'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item $exe (Join-Path $stage 'tanshu-one.exe')
+
+          # Generate the manifest and default MSIX assets, then replace identity
+          # with the exact values configured from Partner Center.
+          winapp init $stage --use-defaults --setup-sdks none
+          if ($LASTEXITCODE -ne 0) { throw "winapp init failed (exit $LASTEXITCODE)." }
+
+          $manifest = Join-Path $stage 'Package.appxmanifest'
+          if (!(Test-Path $manifest)) { throw "winapp init did not create Package.appxmanifest." }
+          [xml]$xml = Get-Content $manifest -Raw
+          $identity = $xml.SelectSingleNode("//*[local-name()='Identity']")
+          if ($null -eq $identity) { throw 'Manifest Identity element is missing.' }
+          $identity.SetAttribute('Name', $env:MSIX_PACKAGE_NAME)
+          $identity.SetAttribute('Publisher', $env:MSIX_PUBLISHER)
+          $identity.SetAttribute('Version', '0.1.0.0')
+
+          $publisher = $xml.SelectSingleNode("//*[local-name()='PublisherDisplayName']")
+          if ($null -eq $publisher) { throw 'PublisherDisplayName element is missing.' }
+          $publisher.InnerText = $env:MSIX_PUBLISHER_DISPLAY_NAME
+
+          $display = $xml.SelectSingleNode("//*[local-name()='DisplayName']")
+          if ($null -ne $display) { $display.InnerText = 'TANSHU ONE' }
+
+          $application = $xml.SelectSingleNode("//*[local-name()='Application']")
+          if ($null -eq $application) { throw 'Application element is missing.' }
+          $application.SetAttribute('Executable', 'tanshu-one.exe')
+          $xml.Save($manifest)
+
+          Write-Host 'Prepared manifest identity:'
+          Write-Host "Name: $($identity.GetAttribute('Name'))"
+          Write-Host "Publisher: $($identity.GetAttribute('Publisher'))"
+
+      - name: Package unsigned MSIX for Store submission
+        shell: pwsh
+        run: |
+          $output = Join-Path $PWD 'TANSHU-ONE_0.1.0.0_x64.msix'
+          winapp pack (Join-Path $PWD 'msix-staging') --no-sign --output $output --executable tanshu-one.exe
+          if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed (exit $LASTEXITCODE)." }
+          if (!(Test-Path $output)) { throw 'MSIX output file was not created.' }
+
+      - name: Upload MSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TANSHU-ONE-MSIX-Store
+          path: TANSHU-ONE_0.1.0.0_x64.msix
+          if-no-files-found: error
+          retention-days: 30
