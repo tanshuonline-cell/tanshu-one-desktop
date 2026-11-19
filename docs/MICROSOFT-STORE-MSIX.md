@@ -26,7 +26,7 @@ The workflow builds the Tauri executable without generating the existing NSIS/MS
 
 ## Important Partner Center product-type distinction
 
-The current reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. Microsoft documents EXE/MSI and MSIX as separate product submission paths and says the EXE/MSI package page accepts an EXE or MSI installer URL, whereas the MSIX package page accepts MSIX/AppX package files. Do **not** upload this MSIX to the existing EXE/MSI submission. Before creating another listing, check whether the existing reservation can be cancelled/released and whether the same name can be reserved under **MSIX/PWA**. Do not delete or cancel the existing reservation until the name-reuse path is confirmed.
+The current reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. Microsoft documents EXE/MSI and MSIX as separate product submission paths and says the EXE/MSI package page accepts an EXE or MSI installer URL, whereas the MSIX package page accepts MSIX/AppX package files. Do **not** upload this MSIX to the existing EXE/MSI submission. Microsoft provides separate **MSIX or PWA app** and **EXE or MSI app** choices when creating a product. The documented Partner Center control for an unsubmitted EXE/MSI draft is **Application overview → App setup card → ⋯ → Delete**; this deletes the draft and all its information. Only after you are certain you want to abandon the EXE/MSI draft, delete it, return to **Apps and games → New product → MSIX or PWA app**, and check whether `TANSHU ONE` is available to reserve again. If it is not available, stop and do not reserve a different name without deciding the branding first. Deleting the draft is irreversible for the draft's saved information.
 
 ## Validation status
 
