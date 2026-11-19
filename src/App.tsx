@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import {
-  Aperture, ArrowUpRight, BadgeIndianRupee, BookOpen, BriefcaseBusiness,
-  Calculator, ChevronDown, ChevronRight, CircleHelp, Clock3, Command,
+  Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
+  Calculator, ChevronDown, ChevronRight, CircleHelp, Command,
   CreditCard, FileImage, FileText, FolderOpen, GraduationCap, Grid2X2,
   HardDrive, Languages, LayoutDashboard, LifeBuoy, Menu, MessageCircle,
-  PanelLeftClose, Plus, Printer, Search, Settings2, ShieldCheck, Sparkles,
+  PanelLeftClose, Search, Settings2, ShieldCheck, Sparkles,
   WalletCards, X
 } from "lucide-react";
 
