@@ -258,3 +258,11 @@
 /* Settings opens as a compact dropdown instead of a full-width sheet overlay */
 .ps-tools-drawer{left:auto;right:266px;width:min(480px,calc(100vw - 350px));max-width:480px;max-height:55vh;overflow:auto}
 @media(max-width:760px){.ps-tools-drawer{left:54px;right:6px;width:auto;max-width:none;max-height:60vh}}
+
+
+/* Photo count and one-click new print-sheet copies */
+.ps-count-control{height:34px;display:flex;align-items:center;gap:5px;flex:0 0 auto;padding:0 7px;border:1px solid #514337;border-radius:8px;background:#28231f;color:#e8d9c8;font-size:9px;font-weight:700;white-space:nowrap}
+.ps-count-control input{width:42px;height:25px;padding:0 3px;border:1px solid #65503b;border-radius:5px;background:#171513;color:#f5c77f;text-align:center;font-size:11px;font-weight:800}
+.ps-new-photo-select{min-width:104px;border-color:#8a6138;background:#3b2b1e;color:#ffe0b5}
+.ps-new-photo-select:focus,.ps-count-control input:focus{outline:1px solid #e0a85c;outline-offset:1px}
+@media(max-width:760px){.ps-count-control{height:30px;padding:0 5px;font-size:8px}.ps-count-control input{width:36px;height:23px}.ps-new-photo-select{min-width:94px}}
