@@ -65,6 +65,11 @@ jobs:
 
           $manifest = Join-Path $PWD 'Package.appxmanifest'
           if (!(Test-Path $manifest)) { throw "winapp init did not create Package.appxmanifest." }
+          # Partner Center text copied from the browser may contain trailing spaces or non-breaking spaces.
+          $env:MSIX_PACKAGE_NAME = $env:MSIX_PACKAGE_NAME.Trim()
+          $env:MSIX_PUBLISHER = $env:MSIX_PUBLISHER.Trim()
+          $env:MSIX_PUBLISHER_DISPLAY_NAME = $env:MSIX_PUBLISHER_DISPLAY_NAME.Trim()
+
           [xml]$xml = Get-Content $manifest -Raw
           $identity = $xml.SelectSingleNode("//*[local-name()='Identity']")
           if ($null -eq $identity) { throw 'Manifest Identity element is missing.' }
