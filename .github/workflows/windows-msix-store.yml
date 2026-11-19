@@ -56,7 +56,7 @@ jobs:
         uses: microsoft/setup-WinAppCli@v0.1
 
       - name: Install JavaScript dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Initialize Tauri MSIX manifest and assets
         shell: pwsh
