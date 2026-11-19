@@ -167,3 +167,14 @@
 .ps-bottom-bar{background:#1b1917;color:#bdb1a5;border-color:#39312a}
 @media(max-width:1000px){.ps-tools-drawer{left:65px;right:225px}.ps-command-title span{display:none}}
 @media(max-width:760px){.ps-topbar{height:46px;min-height:46px;flex-basis:46px}.ps-commandbar{height:auto;min-height:44px;flex-basis:auto;padding:5px 8px}.ps-command-actions .ps-tool-btn span{display:none}.ps-toolbar{height:auto;min-height:40px;flex-basis:auto;flex-wrap:wrap;padding:5px}.ps-quick-tools{width:48px;flex-basis:48px}.ps-quick-tools button{width:38px}.ps-tools-drawer{top:135px;left:52px;right:8px;max-height:60vh}.ps-left-panel{width:110px;flex-basis:110px}.ps-right-panel{width:190px;flex-basis:190px}}
+
+.ps-command-title{gap:12px}
+.ps-command-back{height:27px;display:flex;align-items:center;gap:5px;border:1px solid #e2e7eb;border-radius:5px;background:#fff;color:#728292;padding:0 8px;font-size:9px}
+.ps-command-back:hover{background:#f2f7f8;color:#267f8d;border-color:#c8e3e6}
+.ps-topbar{justify-content:flex-start}
+.ps-tools-drawer .ps-toolbar-divider{display:none}
+.ps-tools-drawer .ps-page-size{display:inline-flex;flex-wrap:wrap;margin:5px;padding:7px 9px;border:1px solid #514538;border-radius:6px}
+.ps-tools-drawer .ps-tool-group{display:flex;flex-wrap:wrap;gap:5px}
+.ps-tools-drawer .ps-tool{height:29px;padding:0 9px;border:1px solid #514538;border-radius:5px;background:#302b26;color:#e5d7c8;font-size:9px}
+.ps-tools-drawer .ps-tool:hover{background:#49372a;color:#ffd19a}
+.ps-tools-drawer .ps-print-tools{border-top:1px solid #514538;margin-top:8px}
