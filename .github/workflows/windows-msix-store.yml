@@ -38,37 +38,19 @@ jobs:
         with:
           targets: x86_64-pc-windows-msvc
 
-      - name: Install WinApp CLI
-        shell: pwsh
-        run: |
-          winget install --id Microsoft.winappcli --exact --source winget --silent --accept-source-agreements --accept-package-agreements
-          if ($LASTEXITCODE -ne 0) { throw "WinApp CLI installation failed (exit $LASTEXITCODE)." }
-          $env:PATH += ";$env:LOCALAPPDATA\Microsoft\WinGet\Links"
-          "PATH=$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          winapp --version
+      - name: Setup Microsoft WinApp CLI
+        uses: microsoft/setup-WinAppCli@v0.1
 
       - name: Install JavaScript dependencies
         run: npm ci
 
-      - name: Build Tauri executable only
-        run: npm run tauri -- build --bundles none
-
-      - name: Stage app and create MSIX manifest
+      - name: Initialize Tauri MSIX manifest and assets
         shell: pwsh
         run: |
-          $exe = Join-Path $PWD 'src-tauri/target/release/tanshu-one.exe'
-          if (!(Test-Path $exe)) { throw "Expected Tauri executable not found: $exe" }
-
-          $stage = Join-Path $PWD 'msix-staging'
-          New-Item -ItemType Directory -Force -Path $stage | Out-Null
-          Copy-Item $exe (Join-Path $stage 'tanshu-one.exe')
-
-          # Generate the manifest and default MSIX assets, then replace identity
-          # with the exact values configured from Partner Center.
-          winapp init $stage --use-defaults --setup-sdks none
+          winapp init . --use-defaults --setup-sdks none
           if ($LASTEXITCODE -ne 0) { throw "winapp init failed (exit $LASTEXITCODE)." }
 
-          $manifest = Join-Path $stage 'Package.appxmanifest'
+          $manifest = Join-Path $PWD 'Package.appxmanifest'
           if (!(Test-Path $manifest)) { throw "winapp init did not create Package.appxmanifest." }
           [xml]$xml = Get-Content $manifest -Raw
           $identity = $xml.SelectSingleNode("//*[local-name()='Identity']")
@@ -92,6 +74,21 @@ jobs:
           Write-Host 'Prepared manifest identity:'
           Write-Host "Name: $($identity.GetAttribute('Name'))"
           Write-Host "Publisher: $($identity.GetAttribute('Publisher'))"
+
+      - name: Build Tauri executable only
+        run: npm run tauri -- build --bundles none
+
+      - name: Stage application files and manifest assets
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD 'src-tauri/target/release/tanshu-one.exe'
+          if (!(Test-Path $exe)) { throw "Expected Tauri executable not found: $exe" }
+
+          $stage = Join-Path $PWD 'msix-staging'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item $exe (Join-Path $stage 'tanshu-one.exe')
+          Copy-Item (Join-Path $PWD 'Package.appxmanifest') $stage
+          Copy-Item (Join-Path $PWD 'Assets') $stage -Recurse
 
       - name: Package unsigned MSIX for Store submission
         shell: pwsh
