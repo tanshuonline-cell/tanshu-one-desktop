@@ -28,7 +28,7 @@ export default function ToolWorkspaces({moduleName,onBack}:Props){
  const invoiceSubtotal=items.reduce((s,i)=>s+Math.max(0,i.qty)*Math.max(0,i.price),0),invoiceTax=invoiceSubtotal*gst/100;
  const print=()=>window.print();
  const heading=(icon:ReactNode,sub:string)=><div className="tw-intro"><div className="tw-icon">{icon}</div><div><div className="tw-kicker">{sub}</div><h1>{moduleName}</h1><p>Independent TANSHU ONE workspace · Your data stays on this PC.</p></div></div>;
- const field=(label:string,value:string|number,onChange:(v:string)=>void,type="text")=><label className="tw-field"><span>{label}</span><input type={type} value={value} onChange={e=>onChange(e.target.value)}/></label>;
+ const field=(label:string,value:string|number,onChange:(v:string)=>void,type:"text"|"number"="text")=><label className="tw-field"><span>{label}</span><input type={type} value={value} onChange={e=>onChange(e.target.value)}/></label>;
  const action=(label:string,onClick:()=>void)=><button className="tw-primary" onClick={onClick}>{label}</button>;
  const filePicker=<label className="tw-upload"><ImageIcon size={18}/> Choose image<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){const url=URL.createObjectURL(f);setImageUrl(url);const im=new Image();im.onload=()=>{setImgW(im.naturalWidth);setImgH(im.naturalHeight)};im.src=url;}}}/></label>;
  let content:ReactNode;
