@@ -22,9 +22,10 @@ type ModuleItem = {
 };
 
 const modules: ModuleItem[] = [
-  { title: "Auto Photo Maker", description: "Automatic passport photo layouts, print sheets and photo preparation", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
-  { title: "Manual Photo Maker", description: "A separate hands-on photo editing workspace", icon: Aperture, group: "Creative Studio", tone: "violet", status: "Separate workspace" },
+  { title: "Auto Passport Photo Maker", description: "Automatic passport photo layouts, print sheets and photo preparation", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
+  { title: "Manual Passport Photo Maker", description: "A separate hands-on photo editing workspace", icon: Aperture, group: "Creative Studio", tone: "violet", status: "Separate workspace" },
   { title: "PVC & ID Studio", description: "Design cards, front and back layouts", icon: CreditCard, group: "Creative Studio", tone: "violet" },
+  { title: "Photo Studio", description: "A separate workspace for detailed photo editing", icon: FileImage, group: "Creative Studio", tone: "blue", status: "Planned workspace" },
   { title: "PDF Master", description: "Merge PDFs, extract pages and rotate documents", icon: FileText, group: "Documents", tone: "coral" },
   { title: "Document Studio", description: "Prepare clean documents for print", icon: FileImage, group: "Documents", tone: "blue" },
   { title: "Image & File Tools", description: "Resize and convert images locally", icon: FolderOpen, group: "Documents", tone: "green" },
@@ -58,7 +59,7 @@ function App() {
   const openModule = (title: string) => setSelectedModule(title);
   const selected = modules.find((item) => item.title === selectedModule);
 
-  if (selectedModule === "Auto Photo Maker") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
+  if (selectedModule === "Auto Passport Photo Maker") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
   if (selectedModule === "PDF Master") return <PDFMaster onBack={() => setSelectedModule(null)} />;
   if (selectedModule && selectedModule !== "Settings") return <ToolWorkspaces moduleName={selectedModule} onBack={() => setSelectedModule(null)} />;
 
@@ -112,7 +113,7 @@ function App() {
         </header>
 
         <div className="page-content">
-          {selectedModule === "Auto Photo Maker" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
+          {selectedModule === "Auto Passport Photo Maker" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
             <section className="module-placeholder">
               <button className="back-link" onClick={() => setSelectedModule(null)}>← Back to workspace</button>
               <div className={`module-hero-icon tone-${selected?.tone ?? "cyan"}`}>{selected && <selected.icon size={30}/>}</div>
@@ -138,8 +139,8 @@ function App() {
               </section>
 
               <section className="quick-start">
-                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Auto Photo Maker</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
-                <button className="button-light" onClick={() => openModule("Auto Photo Maker")}>Open Auto Photo Maker <ArrowUpRight size={16}/></button>
+                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Auto Passport Photo Maker</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
+                <button className="button-light" onClick={() => openModule("Auto Passport Photo Maker")}>Open Auto Passport Photo Maker <ArrowUpRight size={16}/></button>
                 <div className="quick-glow"/>
               </section>
 
