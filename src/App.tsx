@@ -1,4 +1,5 @@
 import PhotoStudio from "./PhotoStudio";
+import PDFMaster from "./PDFMaster";
 import { useMemo, useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
@@ -55,6 +56,7 @@ function App() {
   const selected = modules.find((item) => item.title === selectedModule);
 
   if (selectedModule === "Photo Studio") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
+  if (selectedModule === "PDF Master") return <PDFMaster onBack={() => setSelectedModule(null)} />;
 
   return (
     <div className="app-shell">
