@@ -1,0 +1,58 @@
+name: Windows portable preview (screenshots)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-portable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install JavaScript dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build Windows app executable
+        run: npm run tauri -- build --no-bundle
+
+      - name: Prepare portable preview folder
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD 'src-tauri/target/release/tanshu-one.exe'
+          if (!(Test-Path $exe)) { throw "Expected app executable not found: $exe" }
+          $folder = Join-Path $PWD 'TANSHU-ONLINE-Preview'
+          New-Item -ItemType Directory -Force -Path $folder | Out-Null
+          Copy-Item $exe (Join-Path $folder 'TANSHU-ONLINE.exe')
+          @'
+          TANSHU ONLINE - Windows preview
+          
+          1. Extract this ZIP to a normal folder on your Windows 11 PC.
+          2. Double-click TANSHU-ONLINE.exe.
+          3. If Windows shows a security warning, do not bypass Smart App Control or disable Windows security. Stop and contact the developer.
+          
+          This is an unsigned preview build, not the Microsoft Store package.
+          WebView2 Runtime is required (normally included with Windows 11).
+          '@ | Set-Content -Path (Join-Path $folder 'README.txt') -Encoding UTF8
+          Compress-Archive -Path (Join-Path $folder '*') -DestinationPath (Join-Path $PWD 'TANSHU-ONLINE-Windows-Preview.zip') -Force
+
+      - name: Upload portable preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: TANSHU-ONLINE-Windows-Preview
+          path: TANSHU-ONLINE-Windows-Preview.zip
+          if-no-files-found: error
+          retention-days: 30
