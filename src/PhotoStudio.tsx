@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { ArrowDown, ArrowLeft, ArrowUp, Copy, Crop, Download, Eye, EyeOff, ImagePlus, Layers3, Minus, MousePointer2, Plus, Redo2, RotateCw, Scan, Settings2, SlidersHorizontal, Trash2, Type, Undo2, ZoomIn, ZoomOut, Save, FolderOpen, X, Printer, Ruler } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Copy, Crop, Download, Eye, EyeOff, ImagePlus, Layers3, Minus, MousePointer2, Plus, Redo2, RotateCw, Settings2, SlidersHorizontal, Trash2, Type, Undo2, ZoomIn, ZoomOut, Save, FolderOpen, X, Printer, Ruler } from "lucide-react";
 import "./PhotoStudio.css";
 import brandAvatar from "./assets/tanshu-online-dp.jpg";
 
