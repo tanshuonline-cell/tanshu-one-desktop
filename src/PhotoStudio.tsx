@@ -88,6 +88,7 @@ export default function PhotoStudio({onBack}:{onBack:()=>void}) {
    <button className="ps-tool" onClick={selectAll} title="Select all"><Layers3 size={16}/><span>Select all</span></button>
    <button className="ps-tool" onClick={remove} disabled={!selected} title="Delete"><Trash2 size={16}/><span>Delete</span></button>
    <button className="ps-tool" onClick={autoArrangeCurrentPage} title="Auto arrange"><Ruler size={16}/><span>Auto arrange</span></button>
+   <button className="ps-tool" onClick={smartCenterBalance} disabled={!selectedIds.length&&!selected} title="Smart Center & Balance"><AlignCenter size={16}/><span>Smart Center</span></button>
    <select className="ps-unified-select" aria-label="Sheet paper size" value={presets[page.size]?page.size:""} onChange={e=>changeSize(e.target.value)}><option value="" disabled>Sheet / Paper</option>{Object.keys(presets).map(v=><option key={v}>{v}</option>)}</select>
    <select className="ps-unified-select ps-photo-select" aria-label="Photo size preset" defaultValue="" onChange={e=>{applyPhotoPreset(e.target.value);e.target.value="";}}><option value="" disabled>Photo size</option>{Object.keys(photoPresets).map(v=><option key={v}>{v}</option>)}</select>
    <button className="ps-tool" onClick={()=>selected&&patchLayer(selected.id,{rotation:selected.rotation+90})} disabled={!selected} title="Rotate 90 degrees"><RotateCw size={16}/><span>Rotate</span></button>
