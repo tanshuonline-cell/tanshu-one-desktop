@@ -243,3 +243,14 @@
 .ps-right-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain}
 .ps-tools-drawer{max-width:min(920px,calc(100vw - 90px));}
 @media(max-width:760px){.ps-page-document-select{width:calc(100% - 14px);margin:5px 7px 9px}.ps-footer-history{margin-right:5px}.ps-footer-history button{padding:0 5px}}
+
+.ps-save-dialog{width:min(430px,94vw);background:#211f1d;border:1px solid #574535;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px #0009;color:#f2e8de}
+.ps-save-dialog>header{height:62px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:#292522;border-bottom:1px solid #403832}
+.ps-save-dialog>header div{display:grid;gap:4px}
+.ps-save-dialog>header strong{font-size:14px;color:#fff5e9}
+.ps-save-dialog>header small{font-size:9px;color:#c0b2a3}
+.ps-save-dialog>header button{width:30px;height:30px;border:0;border-radius:6px;background:#403832;color:#eee8e0;display:grid;place-items:center}
+.ps-save-content{display:flex;flex-direction:column;gap:12px;padding:18px}
+.ps-save-content label{display:grid;gap:5px;font-size:10px;color:#d1c5b9}
+.ps-save-content select,.ps-save-content input{height:34px;width:100%;padding:0 9px;border:1px solid #554a40;border-radius:5px;background:#302c28;color:#f5eee6;font-size:11px}
+.ps-save-content p{margin:0;font-size:9px;line-height:1.5;color:#c0b2a3}
