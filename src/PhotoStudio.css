@@ -24,3 +24,81 @@
 .ps-toolbar{height:auto;min-height:48px;flex:0 0 auto;flex-wrap:wrap;padding-top:6px;padding-bottom:6px;row-gap:5px}.ps-print-tools{flex-wrap:wrap;row-gap:5px}.ps-print-tools label{white-space:nowrap}.ps-print-tools input{width:48px}.ps-print-tools label:has(input[type=number]){gap:3px}.ps-print-tools .ps-tool{height:28px;padding:0 8px;font-size:9px}.ps-print-tools input:focus{outline:1px solid #8fcbd2;border-color:#8fcbd2}.ps-layer[title]{user-select:none}
 @media(max-width:1100px){.ps-print-tools{order:10;width:100%;border-left:0;border-top:1px solid #edf0f3;padding:5px 0 0;margin-top:2px}.ps-toolbar{align-content:center}}
 @media(max-width:760px){.ps-print-tools{gap:4px}.ps-print-tools label{font-size:8px}.ps-print-tools input{width:39px}.ps-print-tools .ps-tool{padding:0 6px}}
+
+
+/* TANSHU ONLINE — premium dark photo-editing workspace */
+.photo-studio{background:#171615;color:#eee9e2;color-scheme:dark}
+.ps-topbar,.ps-toolbar,.ps-bottom-bar{background:#211f1d;border-color:#39332e;color:#eee9e2}
+.ps-back,.ps-tool,.ps-zoom,.ps-footer-zoom button,.ps-tool-btn,.ps-bottom-bar,.ps-bottom-bar button{color:#d1c7bc}
+.ps-back{border-color:#39332e}
+.ps-brand strong{color:#fff8ef}
+.ps-brand-mark{background:#39312a;color:#e0ad72}
+.ps-edition{color:#b8a99a;border-color:#494039}
+.ps-save-state{color:#b9ad9f}
+.ps-tool-btn{background:#2b2825;border-color:#494039}
+.ps-tool-btn:hover,.ps-tool:hover{background:#39322c;color:#f4c58d}
+.ps-tool.active{background:#4a3525;border-color:#94663c;color:#ffd19a}
+.ps-toolbar-divider,.ps-page-size{border-color:#494039}
+.ps-page-size span{color:#c0b2a3}
+.ps-page-size select,.ps-print-tools input{background:#302c28;border-color:#51473e;color:#f2e9df}
+.ps-print-tools label{color:#c5b8aa}
+.ps-print-tools .ps-tool{background:#403126;border-color:#705238;color:#f4c58d}
+.ps-left-panel,.ps-right-panel{background:#24211f;border-color:#403832;color:#eee8e0}
+.ps-panel-heading{color:#f1e8de;border-color:#403832}
+.ps-panel-heading button,.ps-property-title strong{color:#eee5db}
+.ps-page-thumb{background:transparent}
+.ps-page-thumb.active{background:#3a3028;border-color:#a8784b}
+.ps-page-paper{background:#fff;border-color:#bcb4aa}
+.ps-page-paper small{color:#5e5a55}
+.ps-page-label{color:#c2b5a8}
+.ps-page-thumb.active .ps-page-label{color:#f2c18d}
+.ps-add-page{background:#302b27;border-color:#75604c;color:#e8c49d}
+.ps-side-note{color:#a99d91}
+.ps-workspace{background-color:#191817;background-image:radial-gradient(#494039 0.7px,transparent .7px);background-size:18px 18px}
+.ps-canvas-ruler{background:#24211f;border-color:#403832;color:#b7a99a}
+.ps-canvas-scroll{background:transparent}
+.ps-paper{background:#fff;box-shadow:0 0 0 1px #b9b0a7,0 12px 35px #0009}
+.ps-empty-page{color:#777}
+.ps-empty-icon{background:#f1eee9;color:#8b725a}
+.ps-empty-page strong{color:#4e443a}
+.ps-empty-page button{background:#f7f0e8;border-color:#d9c5ad;color:#795333}
+.ps-workspace-footer{background:#24211f;border-color:#403832;color:#b9ad9f}
+.ps-property-title{border-color:#403832}
+.ps-property-icon{background:#3a3028;color:#e3b17c}
+.ps-property-title small,.ps-section-label{color:#b4a596}
+.ps-prop-section{border-color:#403832}
+.ps-slider-row>span,.ps-number-grid label,.ps-lock-ratio,.ps-bg-row{color:#c8bbae}
+.ps-slider{background:#51483f}
+.ps-number-grid input,.ps-text-edit{background:#302c28;border-color:#554a40;color:#f5eee6}
+.ps-arrange button,.ps-bg-row button{background:#302c28;border-color:#554a40;color:#e0c7ad}
+.ps-arrange button:hover{background:#49372a;color:#ffd19a}
+.ps-no-selection{color:#a99c8e}
+.ps-no-selection strong{color:#e6d9cb}
+.ps-layer-row.active{background:#403126}
+.ps-layer-select{color:#e1d6ca}
+.ps-layer-mini,.ps-visibility{color:#b8a99a}
+.ps-layers-heading{border-color:#403832}
+.ps-crop-controls{background:#292522;border-color:#55483b;color:#e8ddd1}
+.ps-crop-controls strong{color:#f2c18d}
+.ps-crop-controls label{color:#c8bbae}
+.ps-crop-controls input{background:#302c28;border-color:#554a40;color:#f5eee6}
+.ps-crop-controls button{background:#49372a;border-color:#84613f;color:#f6d2aa}
+.ps-crop-controls button:last-child{background:#302c28;border-color:#554a40;color:#d9cbbd}
+.ps-print-dialog{background:#211f1d;color:#eee8e0}
+.ps-print-dialog>header{background:#292522;border-color:#403832}
+.ps-print-dialog>header strong{color:#fff5e9}
+.ps-print-dialog>header small{color:#c0b2a3}
+.ps-print-dialog>header button{background:#403832;color:#eee8e0}
+.ps-print-preview{background:#302b27;border-color:#51463c}
+.ps-preview-top,.ps-preview-meta{color:#c3b6a8}
+.ps-print-settings{background:#292522;border-color:#494039}
+.ps-print-settings>label{color:#d1c5b9}
+.ps-print-settings select,.ps-print-settings input{background:#302c28;border-color:#554a40;color:#f5eee6}
+.ps-print-spec{background:#302b27;border-color:#5b4938;color:#e6b77f}
+.ps-print-spec b{color:#f3c28e}
+.ps-print-spec small,.ps-print-settings p{color:#c0b2a3}
+.ps-print-secondary{background:#302c28;border-color:#554a40;color:#ead8c5}
+.ps-print-action,.ps-export{background:#a66a38;color:#fff8ef}
+.ps-print-output{background:#fff}
+.ps-slider::-webkit-slider-thumb{border-color:#211f1d}
+.ps-slider::-moz-range-thumb{border-color:#211f1d}
