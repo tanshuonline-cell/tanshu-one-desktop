@@ -54,6 +54,8 @@ function App() {
   const openModule = (title: string) => setSelectedModule(title);
   const selected = modules.find((item) => item.title === selectedModule);
 
+  if (selectedModule === "Photo Studio") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
+
   return (
     <div className="app-shell">
       <aside className={`sidebar ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
