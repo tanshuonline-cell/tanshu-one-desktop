@@ -112,7 +112,7 @@ function App() {
         </header>
 
         <div className="page-content">
-          {selectedModule === "Photo Studio" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
+          {selectedModule === "Auto Photo Maker" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
             <section className="module-placeholder">
               <button className="back-link" onClick={() => setSelectedModule(null)}>← Back to workspace</button>
               <div className={`module-hero-icon tone-${selected?.tone ?? "cyan"}`}>{selected && <selected.icon size={30}/>}</div>
@@ -138,8 +138,8 @@ function App() {
               </section>
 
               <section className="quick-start">
-                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Photo Studio</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
-                <button className="button-light" onClick={() => openModule("Photo Studio")}>Open studio <ArrowUpRight size={16}/></button>
+                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Auto Photo Maker</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
+                <button className="button-light" onClick={() => openModule("Auto Photo Maker")}>Open Auto Photo Maker <ArrowUpRight size={16}/></button>
                 <div className="quick-glow"/>
               </section>
 
