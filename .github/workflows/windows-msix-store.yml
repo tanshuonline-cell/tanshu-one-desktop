@@ -82,7 +82,7 @@ jobs:
           $publisher.InnerText = $env:MSIX_PUBLISHER_DISPLAY_NAME
 
           $display = $xml.SelectSingleNode("//*[local-name()='DisplayName']")
-          if ($null -ne $display) { $display.InnerText = 'TANSHU ONE' }
+          if ($null -ne $display) { $display.InnerText = 'TANSHU ONLINE' }
 
           $application = $xml.SelectSingleNode("//*[local-name()='Application']")
           if ($null -eq $application) { throw 'Application element is missing.' }
@@ -126,7 +126,7 @@ jobs:
       - name: Package unsigned MSIX for Store submission
         shell: pwsh
         run: |
-          $output = Join-Path $PWD 'TANSHU-ONE_0.1.0.0_x64.msix'
+          $output = Join-Path $PWD 'TANSHU-ONLINE_0.1.0.0_x64.msix'
           winapp pack (Join-Path $PWD 'msix-staging') --no-sign --output $output --executable tanshu-one.exe
           if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed (exit $LASTEXITCODE)." }
           if (!(Test-Path $output)) { throw 'MSIX output file was not created.' }
@@ -134,7 +134,7 @@ jobs:
       - name: Upload MSIX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TANSHU-ONE-MSIX-Store
-          path: TANSHU-ONE_0.1.0.0_x64.msix
+          name: TANSHU-ONLINE-MSIX-Store
+          path: TANSHU-ONLINE_0.1.0.0_x64.msix
           if-no-files-found: error
           retention-days: 30
