@@ -22,7 +22,8 @@ type ModuleItem = {
 };
 
 const modules: ModuleItem[] = [
-  { title: "Photo Studio", description: "Passport photos, print sheets and image editing", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
+  { title: "Auto Photo Maker", description: "Automatic passport photo layouts, print sheets and photo preparation", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
+  { title: "Manual Photo Maker", description: "A separate hands-on photo editing workspace", icon: Aperture, group: "Creative Studio", tone: "violet", status: "Separate workspace" },
   { title: "PVC & ID Studio", description: "Design cards, front and back layouts", icon: CreditCard, group: "Creative Studio", tone: "violet" },
   { title: "PDF Master", description: "Merge PDFs, extract pages and rotate documents", icon: FileText, group: "Documents", tone: "coral" },
   { title: "Document Studio", description: "Prepare clean documents for print", icon: FileImage, group: "Documents", tone: "blue" },
@@ -57,7 +58,7 @@ function App() {
   const openModule = (title: string) => setSelectedModule(title);
   const selected = modules.find((item) => item.title === selectedModule);
 
-  if (selectedModule === "Photo Studio") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
+  if (selectedModule === "Auto Photo Maker") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
   if (selectedModule === "PDF Master") return <PDFMaster onBack={() => setSelectedModule(null)} />;
   if (selectedModule && selectedModule !== "Settings") return <ToolWorkspaces moduleName={selectedModule} onBack={() => setSelectedModule(null)} />;
 
