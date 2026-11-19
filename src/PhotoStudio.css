@@ -119,3 +119,5 @@
 .ps-print-tools input{max-width:62px}
 .ps-layer.selected{outline:1.5px solid #e5ad4e;outline-offset:1px}
 .ps-layer.selected:after{content:"";position:absolute;inset:-3px;border:1px dashed rgba(229,173,78,.45);pointer-events:none}
+
+.ps-layer.locked{cursor:not-allowed;}
