@@ -1,0 +1,16 @@
+[package]
+name = "tanshu-one"
+version = "0.1.0"
+description = "Independent offline-first Windows desktop workspace"
+authors = ["TANSHU ONE"]
+edition = "2021"
+
+[lib]
+name = "tanshu_one_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
