@@ -1,10 +1,9 @@
 import { useMemo, useRef, useState } from "react";
 import {
-  ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ChevronDown, ChevronLeft,
-  ChevronRight, Crop, Download, Eye, EyeOff, FlipHorizontal, FlipVertical,
-  Hand, ImagePlus, Layers3, Minus, MousePointer2, Plus, RotateCw, Scan,
-  Settings2, SlidersHorizontal, Square, Type, Trash2, Undo2, Redo2,
-  ZoomIn, ZoomOut, Copy, Maximize2
+  ArrowDown, ArrowLeft, ArrowUp, ChevronDown, ChevronLeft,
+  ChevronRight, Crop, Download, Eye, EyeOff, Hand, ImagePlus, Layers3,
+  Minus, MousePointer2, Plus, RotateCw, Scan, Settings2,
+  SlidersHorizontal, Type, Trash2, Undo2, Redo2, ZoomIn, ZoomOut, Copy
 } from "lucide-react";
 import "./PhotoStudio.css";
 
