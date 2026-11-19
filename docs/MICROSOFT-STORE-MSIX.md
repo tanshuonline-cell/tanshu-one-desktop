@@ -34,4 +34,4 @@ The existing reserved **TANSHU ONE** listing was created as an **EXE/MSI app**. 
 - A successful GitHub Actions run is still required to prove the build and packaging steps work.
 - Partner Center package validation and Store certification are separate steps.
 - Before submission, inspect the generated manifest's capabilities, visual assets, executable entry point, and app behavior. Do not submit until those checks pass.
-- The package version is currently `0.1.0.0`, derived from the app version `0.1.0`.
+- The package version is now `0.1.1.0`, derived from the app version `0.1.1`. Increase this version for subsequent package rebuilds before uploading changed contents to the same submission..
