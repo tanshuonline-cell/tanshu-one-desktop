@@ -1,5 +1,6 @@
 import PhotoStudio from "./PhotoStudio";
 import PDFMaster from "./PDFMaster";
+import ToolWorkspaces from "./ToolWorkspaces";
 import { useMemo, useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
@@ -57,6 +58,7 @@ function App() {
 
   if (selectedModule === "Photo Studio") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
   if (selectedModule === "PDF Master") return <PDFMaster onBack={() => setSelectedModule(null)} />;
+  if (selectedModule && selectedModule !== "Settings") return <ToolWorkspaces moduleName={selectedModule} onBack={() => setSelectedModule(null)} />;
 
   return (
     <div className="app-shell">
