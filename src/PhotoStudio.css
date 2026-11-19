@@ -127,3 +127,43 @@
 .ps-layout-count strong{font-size:10px;color:#f1c36f;white-space:nowrap}
 .ps-layout-count small{font-size:8px;color:#aebbc8;white-space:nowrap}
 .ps-brand-avatar{width:38px;height:38px;min-width:38px;border-radius:50%;object-fit:cover;border:2px solid #d5a34d;box-shadow:0 0 0 2px rgba(213,163,77,.16)}
+
+
+/* Rebalanced premium layout: brand row, document command row, compact tools row */
+.photo-studio{background:#100f0e;color:#f4eee7}
+.ps-topbar{height:52px;min-height:52px;flex:0 0 52px;background:#100f0e;border-bottom:1px solid #342d26;padding:0 18px}
+.ps-brand-lockup{margin:0 auto 0 8px}
+.ps-brand-avatar{width:34px;height:34px;flex-basis:34px}
+.ps-brand-copy strong{font-size:14px;letter-spacing:.08em;color:#f3c66d}
+.ps-top-actions{margin-left:auto}
+.ps-commandbar{height:48px;flex:0 0 48px;background:#fff;color:#263342;border-bottom:1px solid #dfe4e9;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:12px}
+.ps-command-title{display:flex;align-items:baseline;gap:10px;min-width:0}
+.ps-command-title strong{font-size:13px;color:#253548;font-weight:750}
+.ps-command-title span{font-size:9px;color:#8492a0}
+.ps-command-actions{display:flex;align-items:center;gap:7px}
+.ps-command-actions .ps-tool-btn{height:30px;padding:0 9px;background:#fff;border:1px solid #e1e6eb;border-radius:5px;color:#526273;display:flex;align-items:center;gap:6px;font-size:9px}
+.ps-command-actions .ps-tool-btn:hover{background:#f4f8fa;color:#237f8f}
+.ps-command-actions .ps-export{height:30px;padding:0 11px;border-radius:5px}
+.ps-toolbar{height:43px;min-height:43px;flex:0 0 43px;flex-wrap:nowrap;padding:0 14px;background:#f8fafb;border-bottom:1px solid #dfe5ea;gap:7px}
+.ps-toolbar .ps-tool{height:29px;padding:0 10px;border:1px solid transparent;border-radius:5px;color:#596a7b;background:transparent;display:flex;align-items:center;gap:6px;font-size:9px}
+.ps-toolbar .ps-tool:hover,.ps-toolbar .ps-tool.active{background:#e8f4f5;border-color:#c8e3e6;color:#247e8c}
+.ps-tools-drawer{position:absolute;z-index:80;top:143px;left:205px;right:270px;max-height:55vh;overflow:auto;background:#211e1b;border:1px solid #574535;border-radius:9px;box-shadow:0 18px 55px #000a;padding:12px;color:#f1e8de}
+.ps-tools-drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:#f3c58d;font-size:12px}
+.ps-tools-drawer-head button{background:#342c25;border:1px solid #574535;color:#e9d6c2;border-radius:5px;padding:5px}
+.ps-tools-drawer .ps-page-size,.ps-tools-drawer .ps-print-tools{border-color:#514538}
+.ps-tools-drawer .ps-page-size select,.ps-tools-drawer .ps-print-tools input{background:#302c28;border-color:#554a40;color:#f5eee6}
+.ps-tools-drawer .ps-print-tools{display:flex;flex-wrap:wrap;gap:7px;padding:7px 0}
+.ps-tools-drawer .ps-layout-count{border-color:#554a40}
+.ps-body{position:relative}
+.ps-quick-tools{width:58px;flex:0 0 58px;background:#191715;border-right:1px solid #39312a;display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 5px}
+.ps-quick-label{font-size:7px;font-weight:800;letter-spacing:.13em;color:#8f8173;margin-bottom:3px}
+.ps-quick-tools button{width:43px;height:45px;border:1px solid transparent;border-radius:7px;background:transparent;color:#b9aa9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.ps-quick-tools button small{font-size:7px;color:inherit}
+.ps-quick-tools button:hover,.ps-quick-tools button.active{background:#463323;border-color:#805a36;color:#f4c58d}
+.ps-quick-tools button:disabled{opacity:.3}
+.ps-left-panel{width:164px;flex-basis:164px}
+.ps-workspace{background-color:#11100f;background-image:radial-gradient(#39312a .7px,transparent .7px)}
+.ps-right-panel{width:250px;flex-basis:250px}
+.ps-bottom-bar{background:#1b1917;color:#bdb1a5;border-color:#39312a}
+@media(max-width:1000px){.ps-tools-drawer{left:65px;right:225px}.ps-command-title span{display:none}}
+@media(max-width:760px){.ps-topbar{height:46px;min-height:46px;flex-basis:46px}.ps-commandbar{height:auto;min-height:44px;flex-basis:auto;padding:5px 8px}.ps-command-actions .ps-tool-btn span{display:none}.ps-toolbar{height:auto;min-height:40px;flex-basis:auto;flex-wrap:wrap;padding:5px}.ps-quick-tools{width:48px;flex-basis:48px}.ps-quick-tools button{width:38px}.ps-tools-drawer{top:135px;left:52px;right:8px;max-height:60vh}.ps-left-panel{width:110px;flex-basis:110px}.ps-right-panel{width:190px;flex-basis:190px}}
