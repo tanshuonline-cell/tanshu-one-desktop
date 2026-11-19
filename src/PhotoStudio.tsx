@@ -1,210 +1,47 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowDown, ArrowLeft, ArrowUp, ChevronDown, ChevronLeft,
-  ChevronRight, Crop, Download, Eye, EyeOff, Hand, ImagePlus, Layers3,
-  Minus, MousePointer2, Plus, RotateCw, Scan, Settings2,
-  SlidersHorizontal, Type, Trash2, Undo2, Redo2, ZoomIn, ZoomOut, Copy
-} from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Copy, Crop, Download, Eye, EyeOff, Hand, ImagePlus, Layers3, Minus, MousePointer2, Plus, Redo2, RotateCw, Scan, Settings2, SlidersHorizontal, Trash2, Type, Undo2, Save, FolderOpen, Check, X } from "lucide-react";
 import "./PhotoStudio.css";
 
-type Layer = {
-  id: string; name: string; kind: "image" | "text"; src?: string; text?: string;
-  x: number; y: number; width: number; height: number; rotation: number;
-  opacity: number; visible: boolean;
-};
-type StudioPage = { id: number; name: string; size: string; width: number; height: number; layers: Layer[] };
+type Layer = { id:string; name:string; kind:"image"|"text"; src?:string; text?:string; x:number; y:number; width:number; height:number; rotation:number; opacity:number; visible:boolean; crop?:{x:number;y:number;w:number;h:number} };
+type StudioPage = { id:number; name:string; size:string; width:number; height:number; layers:Layer[] };
+type Snapshot = { pages:StudioPage[]; pageId:number; selectedId:string|null };
+const uid=()=>globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const presets:Record<string,{width:number;height:number}>={"4 × 6 in":{width:1200,height:1800},"A4":{width:2480,height:3508},"35 × 45 mm":{width:413,height:531},"PAN 25 × 35 mm":{width:295,height:413},"Letter":{width:2550,height:3300}};
+const makePage=(id:number):StudioPage=>({id,name:`Page ${id}`,size:"4 × 6 in",...presets["4 × 6 in"],layers:[]});
+const readData=(file:File)=>new Promise<string>((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=reject;r.readAsDataURL(file);});
 
-const makePage = (id: number): StudioPage => ({
-  id, name: `Page ${id}`, size: "4 × 6 in", width: 1200, height: 1800, layers: []
-});
-const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-
-export default function PhotoStudio({ onBack }: { onBack: () => void }) {
-  const [pages, setPages] = useState<StudioPage[]>([makePage(1)]);
-  const [pageId, setPageId] = useState(1);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [tool, setTool] = useState("select");
-  const [zoom, setZoom] = useState(35);
-  const [showPages, setShowPages] = useState(true);
-  const [showLayers, setShowLayers] = useState(true);
-  const [drag, setDrag] = useState<{ id: string; x: number; y: number; ox: number; oy: number; ow: number; oh: number; mode: "move" | "resize"; handle?: string } | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const page = pages.find(p => p.id === pageId) ?? pages[0];
-  const selected = page.layers.find(l => l.id === selectedId) ?? null;
-
-  const patchLayer = (id: string, patch: Partial<Layer>) => {
-    setPages(old => old.map(p => p.id === pageId ? { ...p, layers: p.layers.map(l => l.id === id ? { ...l, ...patch } : l) } : p));
-  };
-  const addImage = (files: FileList | null) => {
-    if (!files) return;
-    const additions: Layer[] = Array.from(files).filter(f => f.type.startsWith("image/")).map(file => ({
-      id: uid(), name: file.name, kind: "image", src: URL.createObjectURL(file),
-      x: 75 + Math.random() * 35, y: 90 + Math.random() * 35,
-      width: 300, height: 360, rotation: 0, opacity: 100, visible: true
-    }));
-    if (additions.length) {
-      setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, ...additions] } : p));
-      setSelectedId(additions[additions.length - 1].id);
-    }
-    if (fileRef.current) fileRef.current.value = "";
-  };
-  const addText = () => {
-    const layer: Layer = { id: uid(), name: "Text layer", kind: "text", text: "Your text", x: 145, y: 190, width: 250, height: 70, rotation: 0, opacity: 100, visible: true };
-    setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, layer] } : p));
-    setSelectedId(layer.id);
-  };
-  const changePageSize = (size: string) => {\n    const presets: Record<string, { width: number; height: number }> = { "4 × 6 in": { width: 1200, height: 1800 }, "A4": { width: 2480, height: 3508 }, "35 × 45 mm": { width: 413, height: 531 }, "PAN 25 × 35 mm": { width: 295, height: 413 }, "Letter": { width: 2550, height: 3300 } };\n    const dimensions = presets[size]; if (!dimensions) return;\n    setPages(old => old.map(p => p.id === pageId ? { ...p, size, ...dimensions } : p));\n    setZoom(size === "35 × 45 mm" || size === "PAN 25 × 35 mm" ? 90 : size === "4 × 6 in" ? 35 : 20);\n  };\n  const addPage = () => {
-    const next = Math.max(...pages.map(p => p.id)) + 1;
-    setPages(old => [...old, makePage(next)]);
-    setPageId(next); setSelectedId(null);
-  };
-  const duplicate = () => {
-    if (!selected) return;
-    const copy = { ...selected, id: uid(), name: `${selected.name} copy`, x: selected.x + 24, y: selected.y + 24 };
-    setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, copy] } : p));
-    setSelectedId(copy.id);
-  };
-  const removeSelected = () => {
-    if (!selected) return;
-    setPages(old => old.map(p => p.id === pageId ? { ...p, layers: p.layers.filter(l => l.id !== selected.id) } : p));
-    setSelectedId(null);
-  };
-  const moveLayer = (direction: -1 | 1) => {
-    if (!selected) return;
-    setPages(old => old.map(p => {
-      if (p.id !== pageId) return p;
-      const arr = [...p.layers]; const i = arr.findIndex(l => l.id === selected.id); const j = i + direction;
-      if (i < 0 || j < 0 || j >= arr.length) return p;
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-      return { ...p, layers: arr };
-    }));
-  };
-  const exportPage = async () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = page.width; canvas.height = page.height;
-    const ctx = canvas.getContext("2d"); if (!ctx) return;
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    for (const layer of page.layers) {
-      if (!layer.visible) continue;
-      ctx.save(); ctx.globalAlpha = layer.opacity / 100;
-      ctx.translate(layer.x + layer.width / 2, layer.y + layer.height / 2);
-      ctx.rotate(layer.rotation * Math.PI / 180);
-      if (layer.kind === "image" && layer.src) {
-        const img = new Image(); img.src = layer.src;
-        await new Promise<void>(resolve => { img.onload = () => resolve(); img.onerror = () => resolve(); });
-        if (img.complete && img.naturalWidth) ctx.drawImage(img, -layer.width / 2, -layer.height / 2, layer.width, layer.height);
-      } else {
-        ctx.fillStyle = "#202b39"; ctx.font = "bold 38px Segoe UI"; ctx.textBaseline = "middle";
-        ctx.fillText(layer.text ?? "", -layer.width / 2, 0, layer.width);
-      }
-      ctx.restore();
-    }
-    const a = document.createElement("a"); a.download = `tanshu-one-page-${page.id}.png`; a.href = canvas.toDataURL("image/png"); a.click();
-  };
-  const pageScale = useMemo(() => zoom / 100, [zoom]);
-
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable)) return;
-      const command = event.ctrlKey || event.metaKey;
-      if (command && event.key.toLowerCase() === "d" && selected) {
-        event.preventDefault();
-        const copy = { ...selected, id: uid(), name: `${selected.name} copy`, x: selected.x + 24, y: selected.y + 24 };
-        setPages(old => old.map(p => p.id === pageId ? { ...p, layers: [...p.layers, copy] } : p));
-        setSelectedId(copy.id);
-      } else if ((event.key === "Delete" || event.key === "Backspace") && selected) {
-        event.preventDefault();
-        setPages(old => old.map(p => p.id === pageId ? { ...p, layers: p.layers.filter(l => l.id !== selected.id) } : p));
-        setSelectedId(null);
-      } else if (event.key === "Escape") {
-        setSelectedId(null);
-      } else if (command && (event.key === "+" || event.key === "=")) {
-        event.preventDefault(); setZoom(z => Math.min(150, z + 5));
-      } else if (command && event.key === "-") {
-        event.preventDefault(); setZoom(z => Math.max(10, z - 5));
-      } else if (command && event.key === "]" && selected) {
-        event.preventDefault(); patchLayer(selected.id, { rotation: selected.rotation + 90 });
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [selected, pageId]);
-
-  return <div className="photo-studio">
-    <header className="ps-topbar">
-      <button className="ps-back" onClick={onBack}><ArrowLeft size={16}/><span>Workspace</span></button>
-      <div className="ps-brand"><span className="ps-brand-mark"><Scan size={17}/></span><strong>Photo Studio</strong><span className="ps-edition">TANSHU ONE</span></div>
-      <div className="ps-top-actions">
-        <span className="ps-save-state"><i/> Local project</span>
-        <button className="ps-tool-btn" title="Undo (coming soon)" disabled><Undo2 size={16}/></button>
-        <button className="ps-tool-btn" title="Redo (coming soon)" disabled><Redo2 size={16}/></button>
-        <button className="ps-export" onClick={exportPage}><Download size={15}/> Export PNG</button>
-      </div>
-    </header>
-    <div className="ps-toolbar">
-      <div className="ps-tool-group">
-        <button className={tool === "select" ? "ps-tool active" : "ps-tool"} onClick={() => setTool("select")} title="Select and move"><MousePointer2 size={17}/><span>Select</span></button>
-        <button className={tool === "hand" ? "ps-tool active" : "ps-tool"} onClick={() => setTool("hand")} title="Hand tool"><Hand size={17}/></button>
-        <button className="ps-tool" onClick={() => fileRef.current?.click()} title="Import images"><ImagePlus size={17}/><span>Import</span></button>
-        <button className="ps-tool" onClick={addText} title="Add text"><Type size={17}/><span>Text</span></button>
-        <button className={tool === "crop" ? "ps-tool active" : "ps-tool"} onClick={() => setTool("crop")} title="Crop tool"><Crop size={17}/><span>Crop</span></button>
-        <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={e => addImage(e.target.files)}/>
-      </div>
-      <div className="ps-toolbar-divider"/>
-      <div className="ps-tool-group ps-context-tools">
-        <button className="ps-tool" onClick={duplicate} disabled={!selected}><Copy size={16}/><span>Duplicate</span></button>
-        <button className="ps-tool" onClick={() => selected && patchLayer(selected.id, { rotation: selected.rotation + 90 })} disabled={!selected}><RotateCw size={16}/><span>Rotate 90°</span></button>
-        <button className="ps-tool" onClick={removeSelected} disabled={!selected}><Trash2 size={16}/><span>Delete</span></button>
-      </div>
-      <div className="ps-page-size"><span>PAGE</span><select value={page.size} onChange={e => changePageSize(e.target.value)}><option>4 × 6 in</option><option>A4</option><option>35 × 45 mm</option><option>PAN 25 × 35 mm</option><option>Letter</option></select></div>\n      <div className="ps-zoom"><button onClick={() => setZoom(z => Math.max(10, z - 5))}><Minus size={14}/></button><span>{zoom}%</span><button onClick={() => setZoom(z => Math.min(125, z + 5))}><Plus size={14}/></button></div>
-    </div>
-    <div className="ps-body">
-      {showPages && <aside className="ps-left-panel">
-        <div className="ps-panel-heading"><span>Pages</span><button onClick={addPage} title="Add page"><Plus size={16}/></button></div>
-        <div className="ps-page-list">{pages.map(p => <button key={p.id} className={p.id === pageId ? "ps-page-thumb active" : "ps-page-thumb"} onClick={() => { setPageId(p.id); setSelectedId(null); }}><span className="ps-page-paper"><small>{p.layers.length ? p.layers.length + " layers" : "Blank page"}</small></span><span className="ps-page-label">{p.name}</span></button>)}</div>
-        <button className="ps-add-page" onClick={addPage}><Plus size={14}/> New page</button>
-        <div className="ps-side-note">Each page keeps its own layers and layout.</div>
-      </aside>}
-      <section className="ps-workspace">
-        <div className="ps-canvas-ruler ps-ruler-top"><span>0</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>600 px</span></div>
-        <div className="ps-canvas-scroll" onWheel={e => { if (e.ctrlKey || e.metaKey) { e.preventDefault(); setZoom(z => Math.max(10, Math.min(150, z + (e.deltaY < 0 ? 5 : -5)))); } }}>
-          <div className="ps-paper-wrap" style={{ width: page.width * pageScale, height: page.height * pageScale }}>
-            <div className="ps-paper" style={{ width: page.width, height: page.height, transform: `scale(${pageScale})` }}>
-              {page.layers.filter(l => l.visible).map(layer => <div key={layer.id}
-                className={`ps-layer ${selectedId === layer.id ? "selected" : ""} ${layer.kind === "text" ? "text-layer" : ""}`}
-                style={{ left: layer.x, top: layer.y, width: layer.width, height: layer.height, opacity: layer.opacity / 100, transform: `rotate(${layer.rotation}deg)` }}
-                onPointerDown={e => { if (tool !== "select") return; e.stopPropagation(); setSelectedId(layer.id); setDrag({ id: layer.id, x: e.clientX, y: e.clientY, ox: layer.x, oy: layer.y }); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); }}
-                onPointerMove={e => { if (!drag || drag.id !== layer.id) return; patchLayer(layer.id, { x: Math.max(0, Math.min(page.width - layer.width, drag.ox + (e.clientX - drag.x) / pageScale)), y: Math.max(0, Math.min(page.height - layer.height, drag.oy + (e.clientY - drag.y) / pageScale)) }); }}
-                onPointerUp={() => setDrag(null)}>
-                {layer.kind === "image" ? <img src={layer.src} draggable={false} alt={layer.name}/> : <span>{layer.text}</span>}
-                {selectedId === layer.id && ["nw","ne","sw","se"].map(handle => <i key={handle} className={`ps-handle ${handle}`} onPointerDown={e => { e.stopPropagation(); setDrag({ id: layer.id, x: e.clientX, y: e.clientY, ox: layer.x, oy: layer.y, ow: layer.width, oh: layer.height, mode: "resize", handle }); (e.currentTarget.parentElement as HTMLElement).setPointerCapture(e.pointerId); }}/>) }
-              </div>)}
-              {page.layers.length === 0 && <div className="ps-empty-page"><div className="ps-empty-icon"><ImagePlus size={24}/></div><strong>Your canvas is ready</strong><span>Import a photo or add a text layer to get started.</span><button onClick={() => fileRef.current?.click()}>Import photo</button></div>}
-            </div>
-          </div>
-        </div>
-        <div className="ps-workspace-footer"><span>{page.name} · {page.size}</span><span>{page.width} × {page.height} px · 300 DPI</span><span className="ps-footer-zoom"><button onClick={() => setZoom(z => Math.max(25,z-5))}><ZoomOut size={14}/></button>{zoom}%<button onClick={() => setZoom(z => Math.min(125,z+5))}><ZoomIn size={14}/></button></span></div>
-      </section>
-      {showLayers && <aside className="ps-right-panel">
-        <div className="ps-right-scroll">
-          <div className="ps-panel-heading"><span>Properties</span><Settings2 size={15}/></div>
-          {selected ? <>
-            <div className="ps-property-title"><span className={`ps-property-icon ${selected.kind}`}>{selected.kind === "image" ? <ImagePlus size={15}/> : <Type size={15}/>}</span><div><strong>{selected.name}</strong><small>{selected.kind === "image" ? "Image layer" : "Text layer"}</small></div></div>
-            <div className="ps-prop-section"><div className="ps-section-label">LAYER TRANSFORM</div>
-              <label className="ps-slider-row"><span>Scale</span><strong>{Math.round(selected.width / 3)}%</strong><input className="ps-slider scale" type="range" min="10" max="1000" value={Math.round(selected.width / 3)} onChange={e => patchLayer(selected.id,{width:Number(e.target.value)*3})}/></label>
-              <label className="ps-slider-row"><span>Rotation</span><strong>{selected.rotation}°</strong><input className="ps-slider rotation" type="range" min="-180" max="180" value={selected.rotation} onChange={e => patchLayer(selected.id,{rotation:Number(e.target.value)})}/></label>
-              <label className="ps-slider-row"><span>Opacity</span><strong>{selected.opacity}%</strong><input className="ps-slider opacity" type="range" min="0" max="100" value={selected.opacity} onChange={e => patchLayer(selected.id,{opacity:Number(e.target.value)})}/></label>
-            </div>
-            <div className="ps-prop-section"><div className="ps-section-label">POSITION & SIZE</div><div className="ps-number-grid"><label>X<input type="number" value={Math.round(selected.x)} onChange={e=>patchLayer(selected.id,{x:Number(e.target.value)})}/></label><label>Y<input type="number" value={Math.round(selected.y)} onChange={e=>patchLayer(selected.id,{y:Number(e.target.value)})}/></label><label>W<input type="number" value={Math.round(selected.width)} onChange={e=>patchLayer(selected.id,{width:Math.max(10,Number(e.target.value))})}/></label><label>H<input type="number" value={Math.round(selected.height)} onChange={e=>patchLayer(selected.id,{height:Math.max(10,Number(e.target.value))})}/></label></div></div>
-            {selected.kind === "text" && <div className="ps-prop-section"><div className="ps-section-label">TEXT CONTENT</div><textarea className="ps-text-edit" value={selected.text} onChange={e=>patchLayer(selected.id,{text:e.target.value})}/></div>}
-            <div className="ps-prop-section"><div className="ps-section-label">ARRANGE</div><div className="ps-arrange"><button onClick={()=>moveLayer(1)} title="Bring forward"><ArrowUp size={15}/></button><button onClick={()=>moveLayer(-1)} title="Send backward"><ArrowDown size={15}/></button><button onClick={duplicate} title="Duplicate"><Copy size={15}/></button><button onClick={removeSelected} title="Delete"><Trash2 size={15}/></button></div></div>
-          </> : <div className="ps-no-selection"><SlidersHorizontal size={23}/><strong>No layer selected</strong><span>Select an item on the canvas to edit its properties.</span></div>}
-          <div className="ps-panel-heading ps-layers-heading"><span>Layers <small>{page.layers.length}</small></span><Layers3 size={15}/></div>
-          <div className="ps-layer-list">{[...page.layers].reverse().map(layer=><div key={layer.id} className={`ps-layer-row ${selectedId===layer.id?"active":""}`}><button className="ps-layer-select" onClick={()=>setSelectedId(layer.id)}><span className="ps-layer-mini">{layer.kind==="image"?<ImagePlus size={14}/>:<Type size={14}/>}</span><span>{layer.name}</span></button><button className="ps-visibility" onClick={()=>patchLayer(layer.id,{visible:!layer.visible})}>{layer.visible?<Eye size={14}/>:<EyeOff size={14}/>}</button></div>)}</div>
-        </div>
-      </aside>}
-    </div>
-    <footer className="ps-bottom-bar"><span><span className="ps-green-dot"/> All changes are in this session</span><span>Drag layers to position · Drag corner handles to resize · Ctrl + wheel to zoom</span><button onClick={()=>setShowPages(v=>!v)}>{showPages?<ChevronLeft size={14}/>:<ChevronRight size={14}/>} Pages</button><button onClick={()=>setShowLayers(v=>!v)}>Layers <ChevronDown size={14}/></button></footer>
-  </div>;
+export default function PhotoStudio({onBack}:{onBack:()=>void}) {
+ const [pages,setPages]=useState<StudioPage[]>([makePage(1)]),[pageId,setPageId]=useState(1),[selectedId,setSelectedId]=useState<string|null>(null);
+ const [tool,setTool]=useState<"select"|"hand"|"crop">("select"),[zoom,setZoom]=useState(35),[showPages,setShowPages]=useState(true),[showLayers,setShowLayers]=useState(true);
+ const [history,setHistory]=useState<Snapshot[]>([]),[future,setFuture]=useState<Snapshot[]>([]),[cropDraft,setCropDraft]=useState<{x:number;y:number;w:number;h:number}|null>(null);
+ const fileRef=useRef<HTMLInputElement>(null),projectRef=useRef<HTMLInputElement>(null),canvasRef=useRef<HTMLDivElement>(null),dragRef=useRef<{id:string;startX:number;startY:number;x:number;y:number;w:number;h:number;mode:"move"|"resize";handle?:string}|null>(null);
+ const page=pages.find(p=>p.id===pageId)??pages[0],selected=page.layers.find(l=>l.id===selectedId)??null,scale=zoom/100;
+ const snapshot=():Snapshot=>({pages:JSON.parse(JSON.stringify(pages)),pageId,selectedId});
+ const commit=(next:StudioPage[],nextSelected=selectedId)=>{setHistory(h=>[...h.slice(-39),snapshot()]);setFuture([]);setPages(next);setSelectedId(nextSelected);};
+ const patch=(id:string,p:Partial<Layer>)=>commit(pages.map(pg=>pg.id===pageId?{...pg,layers:pg.layers.map(l=>l.id===id?{...l,...p}:l)}:pg));
+ const addFiles=async(files:FileList|null)=>{if(!files)return;const incoming=await Promise.all(Array.from(files).filter(f=>f.type.startsWith("image/")).map(async f=>({id:uid(),name:f.name,kind:"image" as const,src:await readData(f),x:80,y:100,width:360,height:430,rotation:0,opacity:100,visible:true})));if(incoming.length)commit(pages.map(p=>p.id===pageId?{...p,layers:[...p.layers,...incoming]}:p),incoming[incoming.length-1].id);if(fileRef.current)fileRef.current.value="";};
+ const addText=()=>{const l:Layer={id:uid(),name:"Text layer",kind:"text",text:"Your text",x:140,y:180,width:420,height:100,rotation:0,opacity:100,visible:true};commit(pages.map(p=>p.id===pageId?{...p,layers:[...p.layers,l]}:p),l.id);};
+ const remove=()=>{if(selected)commit(pages.map(p=>p.id===pageId?{...p,layers:p.layers.filter(l=>l.id!==selected.id)}:p),null);};
+ const duplicate=()=>{if(!selected)return;const c={...selected,id:uid(),name:selected.name+" copy",x:selected.x+25,y:selected.y+25};commit(pages.map(p=>p.id===pageId?{...p,layers:[...p.layers,c]}:p),c.id);};
+ const reorder=(d:number)=>{if(!selected)return;const arr=[...page.layers],i=arr.findIndex(l=>l.id===selected.id),j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];commit(pages.map(p=>p.id===pageId?{...p,layers:arr}:p));};
+ const undo=()=>{if(!history.length)return;setFuture(f=>[snapshot(),...f]);const s=history[history.length-1];setHistory(h=>h.slice(0,-1));setPages(s.pages);setPageId(s.pageId);setSelectedId(s.selectedId);};
+ const redo=()=>{if(!future.length)return;setHistory(h=>[...h,snapshot()]);const s=future[0];setFuture(f=>f.slice(1));setPages(s.pages);setPageId(s.pageId);setSelectedId(s.selectedId);};
+ const changeSize=(size:string)=>{const d=presets[size];if(!d)return;commit(pages.map(p=>p.id===pageId?{...p,size,...d}:p));setZoom(size==="35 × 45 mm"||size==="PAN 25 × 35 mm"?90:size==="4 × 6 in"?35:20);};
+ const addPage=()=>{const id=Math.max(...pages.map(p=>p.id))+1;commit([...pages,makePage(id)],null);setPageId(id);};
+ const saveProject=()=>{const data={format:"TANSHU_ONE_PHOTO_PROJECT",version:1,pages,pageId};const blob=new Blob([JSON.stringify(data)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="tanshu-one-project.json";a.click();URL.revokeObjectURL(url);};
+ const restoreProject=async(file:File)=>{try{const data=JSON.parse(await file.text());if(data.format!=="TANSHU_ONE_PHOTO_PROJECT"||!Array.isArray(data.pages))throw Error("Invalid project");setHistory([]);setFuture([]);setPages(data.pages);setPageId(data.pageId??data.pages[0].id);setSelectedId(null);}catch{alert("This TANSHU ONE project file could not be opened.");}if(projectRef.current)projectRef.current.value="";};
+ const exportPage=async()=>{const c=document.createElement("canvas");c.width=page.width;c.height=page.height;const ctx=c.getContext("2d");if(!ctx)return;ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height);for(const l of page.layers){if(!l.visible)continue;ctx.save();ctx.globalAlpha=l.opacity/100;ctx.translate(l.x+l.width/2,l.y+l.height/2);ctx.rotate(l.rotation*Math.PI/180);if(l.kind==="image"&&l.src){const img=new Image();img.src=l.src;await new Promise<void>(r=>{img.onload=()=>r();img.onerror=()=>r();});if(img.naturalWidth){const cr=l.crop??{x:0,y:0,w:img.naturalWidth,h:img.naturalHeight};ctx.drawImage(img,cr.x,cr.y,cr.w,cr.h,-l.width/2,-l.height/2,l.width,l.height);}}else{ctx.fillStyle="#202b39";ctx.font="bold 52px Segoe UI";ctx.textBaseline="middle";ctx.fillText(l.text??"",-l.width/2,0,l.width);}ctx.restore();}const a=document.createElement("a");a.download=`tanshu-one-page-${page.id}.png`;a.href=c.toDataURL("image/png");a.click();};
+ const applyCrop=async()=>{if(!selected||selected.kind!=="image"||!selected.src||!cropDraft)return;const img=new Image();img.src=selected.src;await new Promise<void>(r=>{img.onload=()=>r();img.onerror=()=>r();});if(!img.naturalWidth)return;const sx=Math.max(0,Math.round(cropDraft.x/selected.width*img.naturalWidth)),sy=Math.max(0,Math.round(cropDraft.y/selected.height*img.naturalHeight)),sw=Math.max(1,Math.min(img.naturalWidth-sx,Math.round(cropDraft.w/selected.width*img.naturalWidth))),sh=Math.max(1,Math.min(img.naturalHeight-sy,Math.round(cropDraft.h/selected.height*img.naturalHeight)));patch(selected.id,{crop:{x:sx,y:sy,w:sw,h:sh},x:selected.x+cropDraft.x,y:selected.y+cropDraft.y,width:cropDraft.w,height:cropDraft.h});setCropDraft(null);setTool("select");};
+ useEffect(()=>{const key=(e:KeyboardEvent)=>{const t=e.target as HTMLElement|null;if(t&&(["INPUT","TEXTAREA","SELECT"].includes(t.tagName)||t.isContentEditable))return;const cmd=e.ctrlKey||e.metaKey;if(cmd&&e.key.toLowerCase()==="z"){e.preventDefault();e.shiftKey?redo():undo();}else if(cmd&&e.key.toLowerCase()==="y"){e.preventDefault();redo();}else if(cmd&&e.key.toLowerCase()==="s"){e.preventDefault();saveProject();}else if(cmd&&e.key.toLowerCase()==="d"){e.preventDefault();duplicate();}else if(e.key==="Delete"||e.key==="Backspace"){if(selected){e.preventDefault();remove();}}else if(e.key==="Escape"){setSelectedId(null);setCropDraft(null);setTool("select");}};window.addEventListener("keydown",key);return()=>window.removeEventListener("keydown",key);});
+ const startDrag=(e:React.PointerEvent<HTMLDivElement>,l:Layer,mode:"move"|"resize",handle?:string)=>{e.stopPropagation();setSelectedId(l.id);dragRef.current={id:l.id,startX:e.clientX,startY:e.clientY,x:l.x,y:l.y,w:l.width,h:l.height,mode,handle};e.currentTarget.setPointerCapture(e.pointerId);};
+ const moveDrag=(e:React.PointerEvent<HTMLDivElement>)=>{const d=dragRef.current;if(!d)return;const dx=(e.clientX-d.startX)/scale,dy=(e.clientY-d.startY)/scale;let x=d.x,y=d.y,w=d.w,h=d.h;if(d.mode==="move"){x=Math.max(0,Math.min(page.width-d.w,d.x+dx));y=Math.max(0,Math.min(page.height-d.h,d.y+dy));}else{if(d.handle?.includes("e"))w=Math.max(12,d.w+dx);if(d.handle?.includes("s"))h=Math.max(12,d.h+dy);if(d.handle?.includes("w")){x=d.x+dx;w=Math.max(12,d.w-dx);}if(d.handle?.includes("n")){y=d.y+dy;h=Math.max(12,d.h-dy);}}setPages(old=>old.map(p=>p.id===pageId?{...p,layers:p.layers.map(l=>l.id===d.id?{...l,x,y,width:w,height:h}:l)}:p));};
+ const finishDrag=()=>{if(dragRef.current){setHistory(h=>[...h.slice(-39),snapshot()]);setFuture([]);dragRef.current=null;}};
+ const pageScale=useMemo(()=>scale,[scale]);
+ return <div className="photo-studio">
+ <header className="ps-topbar"><button className="ps-back" onClick={onBack}><ArrowLeft size={16}/><span>Workspace</span></button><div className="ps-brand"><span className="ps-brand-mark"><Scan size={17}/></span><strong>Photo Studio</strong><span className="ps-edition">TANSHU ONE</span></div><div className="ps-top-actions"><span className="ps-save-state"><i/> Local project</span><button className="ps-tool-btn" title="Undo (Ctrl+Z)" onClick={undo} disabled={!history.length}><Undo2 size={16}/></button><button className="ps-tool-btn" title="Redo (Ctrl+Y)" onClick={redo} disabled={!future.length}><Redo2 size={16}/></button><button className="ps-tool-btn" title="Save project (Ctrl+S)" onClick={saveProject}><Save size={15}/></button><button className="ps-tool-btn" title="Open project" onClick={()=>projectRef.current?.click()}><FolderOpen size={15}/></button><input ref={projectRef} type="file" accept=".json,application/json" hidden onChange={e=>e.target.files?.[0]&&restoreProject(e.target.files[0])}/><button className="ps-export" onClick={exportPage}><Download size={15}/> Export PNG</button></div></header>
+ <div className="ps-toolbar"><div className="ps-tool-group"><button className={tool==="select"?"ps-tool active":"ps-tool"} onClick={()=>{setTool("select");setCropDraft(null);}}><MousePointer2 size={17}/><span>Select</span></button><button className={tool==="hand"?"ps-tool active":"ps-tool"} onClick={()=>setTool("hand")}><Hand size={17}/></button><button className="ps-tool" onClick={()=>fileRef.current?.click()}><ImagePlus size={17}/><span>Import</span></button><button className="ps-tool" onClick={addText}><Type size={17}/><span>Text</span></button><button className={tool==="crop"?"ps-tool active":"ps-tool"} onClick={()=>{if(selected?.kind==="image"){setTool("crop");setCropDraft({x:0,y:0,w:selected.width,h:selected.height});}}} disabled={selected?.kind!=="image"}><Crop size={17}/><span>Crop</span></button><input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={e=>addFiles(e.target.files)}/></div><div className="ps-toolbar-divider"/><div className="ps-tool-group ps-context-tools"><button className="ps-tool" onClick={duplicate} disabled={!selected}><Copy size={16}/><span>Duplicate</span></button><button className="ps-tool" onClick={()=>selected&&patch(selected.id,{rotation:selected.rotation+90})} disabled={!selected}><RotateCw size={16}/><span>Rotate 90°</span></button><button className="ps-tool" onClick={remove} disabled={!selected}><Trash2 size={16}/><span>Delete</span></button></div><div className="ps-page-size"><span>PAGE</span><select value={page.size} onChange={e=>changeSize(e.target.value)}>{Object.keys(presets).map(s=><option key={s}>{s}</option>)}</select></div><div className="ps-zoom"><button onClick={()=>setZoom(z=>Math.max(10,z-5))}><Minus size={14}/></button><span>{zoom}%</span><button onClick={()=>setZoom(z=>Math.min(150,z+5))}><Plus size={14}/></button></div></div>
+ <div className="ps-body">{showPages&&<aside className="ps-left-panel"><div className="ps-panel-heading"><span>Pages</span><button onClick={addPage}><Plus size={16}/></button></div><div className="ps-page-list">{pages.map(p=><button key={p.id} className={p.id===pageId?"ps-page-thumb active":"ps-page-thumb"} onClick={()=>{setPageId(p.id);setSelectedId(null);setCropDraft(null);}}><span className="ps-page-paper"><small>{p.layers.length? p.layers.length+" layers":"Blank page"}</small></span><span className="ps-page-label">{p.name}</span></button>)}</div><button className="ps-add-page" onClick={addPage}><Plus size={14}/> New page</button><div className="ps-side-note">Each page keeps its own layers and layout.</div></aside>}
+ <section className="ps-workspace"><div className="ps-canvas-ruler ps-ruler-top"><span>0</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>{page.width} px</span></div><div ref={canvasRef} className="ps-canvas-scroll" onWheel={e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();setZoom(z=>Math.max(10,Math.min(150,z+(e.deltaY<0?5:-5))));}}}><div className="ps-paper-wrap" style={{width:page.width*pageScale,height:page.height*pageScale}}><div className="ps-paper" style={{width:page.width,height:page.height,transform:`scale(${pageScale})`}}>{page.layers.filter(l=>l.visible).map(l=><div key={l.id} className={`ps-layer ${selectedId===l.id?"selected":""} ${l.kind==="text"?"text-layer":""}`} style={{left:l.x,top:l.y,width:l.width,height:l.height,opacity:l.opacity/100,transform:`rotate(${l.rotation}deg)`}} onPointerDown={e=>tool==="select"&&startDrag(e,l,"move")} onPointerMove={moveDrag} onPointerUp={finishDrag} onPointerCancel={finishDrag}>{l.kind==="image"?<img src={l.src} draggable={false} alt={l.name} style={l.crop?{objectFit:"fill"}:undefined}/>:<span>{l.text}</span>}{selectedId===l.id&&tool==="select"&&["nw","ne","sw","se"].map(h=><i key={h} className={`ps-handle ${h}`} onPointerDown={e=>startDrag(e,l,"resize",h)} onPointerMove={moveDrag} onPointerUp={finishDrag}/>)}</div>)}{tool==="crop"&&selected&&cropDraft&&<div className="ps-crop-box" style={{left:selected.x+cropDraft.x,top:selected.y+cropDraft.y,width:cropDraft.w,height:cropDraft.h}}><span>Crop area · adjust W/H in Properties</span></div>}{!page.layers.length&&<div className="ps-empty-page"><div className="ps-empty-icon"><ImagePlus size={24}/></div><strong>Your canvas is ready</strong><span>Import a photo or add a text layer to get started.</span><button onClick={()=>fileRef.current?.click()}>Import photo</button></div>}</div></div></div><div className="ps-workspace-footer"><span>{page.name} · {page.size}</span><span>{page.width} × {page.height} px · 300 DPI target</span><span className="ps-footer-zoom">{zoom}%</span></div></section>
+ {showLayers&&<aside className="ps-right-panel"><div className="ps-right-scroll"><div className="ps-panel-heading"><span>Properties</span><Settings2 size={15}/></div>{selected?<><div className="ps-property-title"><span className={`ps-property-icon ${selected.kind}`}>{selected.kind==="image"?<ImagePlus size={15}/>:<Type size={15}/>}</span><div><strong>{selected.name}</strong><small>{selected.kind} layer</small></div></div><div className="ps-prop-section"><div className="ps-section-label">LAYER TRANSFORM</div><label className="ps-slider-row"><span>Scale</span><strong>{Math.round(selected.width/3)}%</strong><input className="ps-slider scale" type="range" min="10" max="1000" value={Math.round(selected.width/3)} onChange={e=>patch(selected.id,{width:Number(e.target.value)*3})}/></label><label className="ps-slider-row"><span>Rotation</span><strong>{selected.rotation}°</strong><input className="ps-slider rotation" type="range" min="-180" max="180" value={selected.rotation} onChange={e=>patch(selected.id,{rotation:Number(e.target.value)})}/></label><label className="ps-slider-row"><span>Opacity</span><strong>{selected.opacity}%</strong><input className="ps-slider opacity" type="range" min="0" max="100" value={selected.opacity} onChange={e=>patch(selected.id,{opacity:Number(e.target.value)})}/></label></div><div className="ps-prop-section"><div className="ps-section-label">POSITION & SIZE</div><div className="ps-number-grid">{(["x","y","width","height"] as const).map(k=><label key={k}>{k.toUpperCase()}<input type="number" value={Math.round(selected[k])} onChange={e=>patch(selected.id,{[k]:Math.max(k==="width"||k==="height"?10:0,Number(e.target.value))})}/></label>)}</div></div>{tool==="crop"&&selected.kind==="image"&&<div className="ps-prop-section"><div className="ps-section-label">CROP AREA</div><div className="ps-number-grid">{(["x","y","w","h"] as const).map(k=><label key={k}>{k.toUpperCase()}<input type="number" min="0" value={Math.round(cropDraft?.[k]??0)} onChange={e=>setCropDraft(d=>({...d??{x:0,y:0,w:selected.width,h:selected.height},[k]:Math.max(1,Number(e.target.value))}))}/></label>)}</div><div className="ps-arrange" style={{marginTop:10}}><button onClick={applyCrop}><Check size={15}/></button><button onClick={()=>{setCropDraft(null);setTool("select");}}><X size={15}/></button></div></div>}{selected.kind==="text"&&<div className="ps-prop-section"><div className="ps-section-label">TEXT CONTENT</div><textarea className="ps-text-edit" value={selected.text} onChange={e=>patch(selected.id,{text:e.target.value})}/></div>}<div className="ps-prop-section"><div className="ps-section-label">ARRANGE</div><div className="ps-arrange"><button onClick={()=>reorder(1)}><ArrowUp size={15}/></button><button onClick={()=>reorder(-1)}><ArrowDown size={15}/></button><button onClick={duplicate}><Copy size={15}/></button><button onClick={remove}><Trash2 size={15}/></button></div></div></>:<div className="ps-no-selection"><SlidersHorizontal size={23}/><strong>No layer selected</strong><span>Select an item on the canvas to edit its properties.</span></div>}<div className="ps-panel-heading ps-layers-heading"><span>Layers <small>{page.layers.length}</small></span><Layers3 size={15}/></div><div className="ps-layer-list">{[...page.layers].reverse().map(l=><div key={l.id} className={`ps-layer-row ${selectedId===l.id?"active":""}`}><button className="ps-layer-select" onClick={()=>setSelectedId(l.id)}><span className="ps-layer-mini">{l.kind==="image"?<ImagePlus size={14}/>:<Type size={14}/>}</span><span>{l.name}</span></button><button className="ps-visibility" onClick={()=>patch(l.id,{visible:!l.visible})}>{l.visible?<Eye size={14}/>:<EyeOff size={14}/>}</button></div>)}</div></div></aside>}</div>
+ <footer className="ps-bottom-bar"><span><span className="ps-green-dot"/> Local session · Save project to keep your work</span><span>Drag to move · Corner handles to resize · Ctrl+wheel to zoom</span><button onClick={()=>setShowPages(v=>!v)}>Pages</button><button onClick={()=>setShowLayers(v=>!v)}>Layers</button></footer></div>;
 }
