@@ -28,10 +28,11 @@
   "bundle": {
     "active": true,
     "targets": ["nsis", "msi"],
+    "icon": ["icons/icon.ico"],
     "windows": {
       "nsis": {
         "displayLanguageSelector": false,
-        "installerIcon": null
+        "installerIcon": "icons/icon.ico"
       }
     }
   }
