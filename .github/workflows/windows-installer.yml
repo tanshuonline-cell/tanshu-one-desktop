@@ -23,6 +23,12 @@ jobs:
           node-version: 20
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+      - name: Create Windows application icon
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force src-tauri/icons | Out-Null
+          $icon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAACWfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib///////////+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m////////////ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv///////////5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib///////////+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m////////////ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv///////////5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib///////////+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m////////////ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m//////////////////////////////////////////////////////+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv//////////////////////////////////////////////////////ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/ln4m/5Z+Jv+Wfib/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+          [IO.File]::WriteAllBytes("src-tauri/icons/icon.ico", [Convert]::FromBase64String($icon))
       - name: Install frontend dependencies
         run: npm install
       - name: Build TANSHU ONE Windows installers
