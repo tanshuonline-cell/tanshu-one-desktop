@@ -23,9 +23,9 @@ type ModuleItem = {
 const modules: ModuleItem[] = [
   { title: "Photo Studio", description: "Passport photos, print sheets and image editing", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
   { title: "PVC & ID Studio", description: "Design cards, front and back layouts", icon: CreditCard, group: "Creative Studio", tone: "violet" },
-  { title: "PDF Master", description: "Merge, split, organize and export PDFs", icon: FileText, group: "Documents", tone: "coral" },
+  { title: "PDF Master", description: "Merge PDFs, extract pages and rotate documents", icon: FileText, group: "Documents", tone: "coral" },
   { title: "Document Studio", description: "Prepare clean documents for print", icon: FileImage, group: "Documents", tone: "blue" },
-  { title: "Image & File Tools", description: "Resize, convert and compress files", icon: FolderOpen, group: "Documents", tone: "green" },
+  { title: "Image & File Tools", description: "Resize and convert images locally", icon: FolderOpen, group: "Documents", tone: "green" },
   { title: "Resume & Career", description: "Create resumes, CVs and biodata", icon: BriefcaseBusiness, group: "Business & Career", tone: "amber" },
   { title: "Invoice & Business", description: "Invoices, receipts and quotations", icon: BadgeIndianRupee, group: "Business & Career", tone: "green" },
   { title: "Education & Exam Desk", description: "Useful study and exam utilities", icon: GraduationCap, group: "Everyday Tools", tone: "blue" },
