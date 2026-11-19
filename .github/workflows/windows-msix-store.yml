@@ -2,6 +2,19 @@ name: Windows MSIX (Microsoft Store)
 
 on:
   workflow_dispatch:
+    inputs:
+      package_name:
+        description: "Exact Package/Identity Name from Partner Center"
+        required: false
+        type: string
+      publisher:
+        description: "Exact Package/Identity Publisher distinguished name (including CN=)"
+        required: false
+        type: string
+      publisher_display_name:
+        description: "Exact publisher display name from Partner Center"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -10,9 +23,9 @@ jobs:
   build-msix:
     runs-on: windows-latest
     env:
-      MSIX_PACKAGE_NAME: ${{ vars.MSIX_PACKAGE_NAME }}
-      MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
-      MSIX_PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME }}
+      MSIX_PACKAGE_NAME: ${{ inputs.package_name || vars.MSIX_PACKAGE_NAME }}
+      MSIX_PUBLISHER: ${{ inputs.publisher || vars.MSIX_PUBLISHER }}
+      MSIX_PUBLISHER_DISPLAY_NAME: ${{ inputs.publisher_display_name || vars.MSIX_PUBLISHER_DISPLAY_NAME }}
     steps:
       - name: Check Store identity configuration
         shell: pwsh
@@ -59,8 +72,13 @@ jobs:
           $identity.SetAttribute('Publisher', $env:MSIX_PUBLISHER)
           $identity.SetAttribute('Version', '0.1.0.0')
 
+          $properties = $xml.SelectSingleNode("//*[local-name()='Properties']")
+          if ($null -eq $properties) { throw 'Manifest Properties element is missing.' }
           $publisher = $xml.SelectSingleNode("//*[local-name()='PublisherDisplayName']")
-          if ($null -eq $publisher) { throw 'PublisherDisplayName element is missing.' }
+          if ($null -eq $publisher) {
+            $publisher = $xml.CreateElement('PublisherDisplayName', $properties.NamespaceURI)
+            $properties.AppendChild($publisher) | Out-Null
+          }
           $publisher.InnerText = $env:MSIX_PUBLISHER_DISPLAY_NAME
 
           $display = $xml.SelectSingleNode("//*[local-name()='DisplayName']")
@@ -69,6 +87,21 @@ jobs:
           $application = $xml.SelectSingleNode("//*[local-name()='Application']")
           if ($null -eq $application) { throw 'Application element is missing.' }
           $application.SetAttribute('Executable', 'tanshu-one.exe')
+          $application.SetAttribute('EntryPoint', 'Windows.FullTrustApplication')
+
+          $fullTrust = $xml.SelectSingleNode("//*[local-name()='Capability' and @Name='runFullTrust']")
+          if ($null -eq $fullTrust) {
+            $capabilities = $xml.SelectSingleNode("//*[local-name()='Capabilities']")
+            if ($null -eq $capabilities) { throw 'Manifest Capabilities element is missing.' }
+            $rescapNs = 'http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities'
+            $hasRescap = $xml.DocumentElement.GetAttribute('xmlns:rescap')
+            if ([string]::IsNullOrWhiteSpace($hasRescap)) {
+              $xml.DocumentElement.SetAttribute('xmlns:rescap', $rescapNs)
+            }
+            $fullTrust = $xml.CreateElement('rescap', 'Capability', $rescapNs)
+            $fullTrust.SetAttribute('Name', 'runFullTrust')
+            $capabilities.AppendChild($fullTrust) | Out-Null
+          }
           $xml.Save($manifest)
 
           Write-Host 'Prepared manifest identity:'
@@ -76,7 +109,7 @@ jobs:
           Write-Host "Publisher: $($identity.GetAttribute('Publisher'))"
 
       - name: Build Tauri executable only
-        run: npm run tauri -- build --bundles none
+        run: npm run tauri -- build --no-bundle
 
       - name: Stage application files and manifest assets
         shell: pwsh
