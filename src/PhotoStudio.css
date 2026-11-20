@@ -302,3 +302,10 @@
 .ps-layer.selected .ps-handle.ne{right:-6px;top:-6px;cursor:nesw-resize}
 .ps-layer.selected .ps-handle.sw{left:-6px;bottom:-6px;cursor:nesw-resize}
 .ps-layer.selected .ps-handle.se{right:-6px;bottom:-6px;cursor:nwse-resize}
+
+.ps-bg-mode{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.ps-bg-mode button{min-height:26px;padding:4px 6px;border:1px solid #5c4d3c;border-radius:5px;background:#211e1a;color:#d8c8b5;font-size:8px;font-weight:650}
+.ps-bg-mode button.active{border-color:#d7a05b;background:#503a27;color:#fff0dc}
+.ps-bg-tools button.ps-bg-run{min-height:34px;border-color:#d5a15d;background:linear-gradient(135deg,#b77a3e,#83512e);color:#fff8ef;font-size:10px;font-weight:800;letter-spacing:.1px}
+.ps-bg-tools button:disabled{opacity:.55;cursor:wait}
+.ps-bg-progress{display:block;min-height:15px;padding:4px 6px;border-radius:4px;background:#1b2527;color:#b8e4d2!important;font-size:9px!important;line-height:1.4}
