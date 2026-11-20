@@ -1,7 +1,7 @@
 import { FilesetResolver, ImageSegmenter } from "@mediapipe/tasks-vision";
 
 const VISION_WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm";
-const PERSON_MODEL = "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite";
+const PERSON_MODEL = "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite";
 const HAIR_MODEL = "https://storage.googleapis.com/mediapipe-models/image_segmenter/hair_segmenter/float32/1/hair_segmenter.tflite";
 
 type Mask = { width:number; height:number; getAsFloat32Array:()=>Float32Array };
@@ -13,9 +13,10 @@ async function loadSegmenters(){
   if(!segmentersPromise)segmentersPromise=(async()=>{
     const vision=await FilesetResolver.forVisionTasks(VISION_WASM);
     const options={runningMode:"IMAGE" as const,outputCategoryMask:false,outputConfidenceMasks:true};
-    const person=await ImageSegmenter.createFromOptions(vision,{...options,baseOptions:{modelAssetPath:PERSON_MODEL,delegate:"GPU"}});
+    const create=async(modelAssetPath:string)=>{try{return await ImageSegmenter.createFromOptions(vision,{...options,baseOptions:{modelAssetPath,delegate:"GPU"}});}catch{return await ImageSegmenter.createFromOptions(vision,{...options,baseOptions:{modelAssetPath,delegate:"CPU"}});}};
+    const person=await create(PERSON_MODEL);
     try{
-      const hair=await ImageSegmenter.createFromOptions(vision,{...options,baseOptions:{modelAssetPath:HAIR_MODEL,delegate:"GPU"}});
+      const hair=await create(HAIR_MODEL);
       return {person:person as unknown as Segmenter,hair:hair as unknown as Segmenter};
     }catch(error){person.close();throw error;}
   })().catch(error=>{segmentersPromise=null;throw error;});
