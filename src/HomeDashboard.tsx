@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ComponentType } from "react";
-import { ArrowUpRight, Aperture, Search, Sparkles, ShieldCheck, Command, ChevronRight } from "lucide-react";
+import { ArrowUpRight, Aperture, Search, ShieldCheck, Command } from "lucide-react";
 
 type Tool = {
   title: string;
