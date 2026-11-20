@@ -48,7 +48,7 @@ function App() {
   const [activeNav, setActiveNav] = useState("Overview");
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedModule, setSelectedModule] = useState<string | null>(null);
+  const [selectedModule, setSelectedModule] = useState<string | null>(() => { try { const key = "tanshu-online-auto-passport-first-open"; if (!window.localStorage.getItem(key)) { window.localStorage.setItem(key, "1"); return "Auto Passport Photo Maker"; } } catch { return "Auto Passport Photo Maker"; } return null; });
   const [showHelp, setShowHelp] = useState(false);
 
   const filteredModules = useMemo(
