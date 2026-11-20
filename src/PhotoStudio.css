@@ -275,3 +275,23 @@
 .ps-layer-delete-mark:hover svg{animation:ps-bin-lid-wiggle .42s ease-in-out infinite alternate}
 @keyframes ps-bin-lid-wiggle{from{transform:rotate(-12deg) translateY(-1px)}to{transform:rotate(12deg) translateY(-2px)}}
 .ps-quick-tools button.active[title^="Toggle delete"]{background:#61282b;border-color:#e16b70;color:#fff}
+
+
+/* Compact actions above the print canvas and collapsible right-side sections */
+.ps-ruler-top{justify-content:flex-start;gap:14px;padding:0 8px;position:relative}
+.ps-sheet-floating-actions{margin-left:auto;display:flex;align-items:center;gap:4px;height:100%}
+.ps-sheet-floating-actions button{height:17px;min-width:23px;padding:0 5px;display:flex;align-items:center;justify-content:center;gap:3px;border:1px solid #6a5847;border-radius:4px;background:#29231e;color:#f0d6b7;font-size:8px;line-height:1}
+.ps-sheet-floating-actions button:hover:not(:disabled){background:#59402c;border-color:#d3a05c;color:#fff2df}
+.ps-sheet-floating-actions button:disabled{opacity:.32;cursor:not-allowed}
+.ps-sheet-floating-actions button small{font-size:8px;font-weight:700}
+.ps-collapse-heading{width:100%;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left;color:inherit}
+.ps-collapse-heading:hover{background:#302923}
+.ps-bg-tools{display:grid;gap:7px;padding:9px;margin:8px 0;border:1px solid #65503a;border-radius:7px;background:#28231f;color:#eee0cf}
+.ps-bg-tools>strong{font-size:10px;color:#f3c58d}
+.ps-bg-tools label{display:grid;grid-template-columns:1fr auto;align-items:center;gap:7px;font-size:9px;color:#d8c8b5}
+.ps-bg-tools input[type=color]{width:34px;height:25px;padding:1px;border:1px solid #65503a;border-radius:4px;background:#171513}
+.ps-bg-tools input[type=range]{grid-column:1/3;width:100%;accent-color:#d5a15d}
+.ps-bg-tools label small{grid-column:1/3;color:#bca990;font-size:8px}
+.ps-bg-tools button{min-height:28px;padding:4px 8px;border:1px solid #8a6138;border-radius:5px;background:#a66a38;color:#fff8ef;font-size:9px;font-weight:700}
+.ps-bg-tools button+button{background:#302c28;border-color:#65503a;color:#ead8c5}
+.ps-bg-tools>small{font-size:8px;line-height:1.45;color:#c1ad96}
