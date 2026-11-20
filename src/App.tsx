@@ -3,7 +3,7 @@ import brandAvatar from "./assets/tanshu-online-dp.jpg";
 import PDFMaster from "./PDFMaster";
 import ToolWorkspaces from "./ToolWorkspaces";
 import HomeDashboard from "./HomeDashboard";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
   Calculator, ChevronDown, ChevronRight, CircleHelp,
@@ -47,15 +47,9 @@ const navItems = [
 
 function App() {
   const [activeNav, setActiveNav] = useState("Overview");
-  const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedModule, setSelectedModule] = useState<string | null>(() => { try { const key = "tanshu-online-auto-passport-first-open"; if (!window.localStorage.getItem(key)) { window.localStorage.setItem(key, "1"); return "Auto Passport Photo Maker"; } } catch { return "Auto Passport Photo Maker"; } return null; });
   const [showHelp, setShowHelp] = useState(false);
-
-  const filteredModules = useMemo(
-    () => modules.filter((item) => `${item.title} ${item.description} ${item.group}`.toLowerCase().includes(query.toLowerCase())),
-    [query],
-  );
 
   const openModule = (title: string) => setSelectedModule(title);
   const selected = modules.find((item) => item.title === selectedModule);
