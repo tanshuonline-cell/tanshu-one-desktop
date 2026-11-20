@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import type { ComponentType } from "react";
 import { ArrowUpRight, Aperture, Search, ShieldCheck, Command } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 type Tool = {
   title: string;
   description: string;
-  icon: ComponentType<{ size?: number }>;
+  icon: LucideIcon;
   group: string;
   tone: string;
   status?: string;
