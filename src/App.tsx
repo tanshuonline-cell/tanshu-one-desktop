@@ -6,10 +6,10 @@ import HomeDashboard from "./HomeDashboard";
 import { useMemo, useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
-  Calculator, ChevronDown, ChevronRight, CircleHelp, Command,
+  Calculator, ChevronDown, ChevronRight, CircleHelp,
   CreditCard, FileImage, FileText, FolderOpen, GraduationCap, Grid2X2,
   HardDrive, Languages, LayoutDashboard, LifeBuoy, Menu, MessageCircle,
-  PanelLeftClose, Search, Settings2, ShieldCheck, Sparkles,
+  PanelLeftClose, Settings2, ShieldCheck, Sparkles,
   WalletCards, X
 } from "lucide-react";
 
