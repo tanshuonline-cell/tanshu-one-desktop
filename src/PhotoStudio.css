@@ -338,3 +338,21 @@
 .ps-paper-empty .ps-empty-page button:hover{background:#3a3026;border-color:#8a6947}
 .ps-workspace:has(.ps-paper-empty){position:relative}
 .ps-workspace:has(.ps-paper-empty)::after{content:"PREVIEW AREA";position:absolute;right:12px;top:10px;z-index:2;padding:8px 11px;border:1px solid #343d44;border-radius:6px;background:#20262b;color:#9ba8b2;font-size:8px;letter-spacing:.08em;pointer-events:none}
+
+
+/* Reference-matched empty canvas: only the blank preview area changes */
+.ps-workspace:has(.ps-paper-empty) .ps-ruler-top,
+.ps-workspace:has(.ps-paper-empty) .ps-workspace-footer{display:none}
+.ps-workspace:has(.ps-paper-empty) .ps-canvas-scroll.is-empty{width:100%;height:100%;min-height:0;flex:1 1 auto;padding:24px;display:flex;align-items:center;justify-content:center;background:transparent}
+.ps-workspace:has(.ps-paper-empty) .ps-paper-wrap{width:clamp(240px,25.2vw,302px)!important;height:clamp(300px,31.5vw,378px)!important;flex:0 0 auto}
+.ps-workspace:has(.ps-paper-empty) .ps-paper.ps-paper-empty{width:100%!important;height:100%!important;transform:none!important;position:relative;border:1px dashed #46515a;border-radius:2px;background:rgba(23,28,33,.42)!important;box-shadow:none!important;overflow:hidden}
+.ps-paper-empty .ps-empty-page{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;padding:20px 12px;text-align:center;box-shadow:none}
+.ps-paper-empty .ps-empty-icon{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:12px;background:#262d33;border:1px solid #3b444c;color:#c4cdd5}
+.ps-paper-empty .ps-empty-page strong{font-size:12px;line-height:1.35;color:#e4e9ed;font-weight:650}
+.ps-paper-empty .ps-empty-page span{font-size:9px;line-height:1.5;color:#9ba6b0;letter-spacing:.01em}
+.ps-paper-empty .ps-empty-page button{height:31px;min-height:31px;margin-top:2px;padding:0 13px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #514638;border-radius:7px;background:#292621;color:#f0d4b2;font-size:9px;font-weight:600;box-shadow:none;cursor:pointer;transition:background .15s,border-color .15s}
+.ps-paper-empty .ps-empty-page button:hover{background:#3a3026;border-color:#8a6947}
+@media(max-width:760px){
+ .ps-workspace:has(.ps-paper-empty) .ps-canvas-scroll.is-empty{padding:14px}
+ .ps-workspace:has(.ps-paper-empty) .ps-paper-wrap{width:clamp(220px,62vw,290px)!important;height:clamp(280px,76vw,360px)!important}
+}
