@@ -1,7 +1,7 @@
 name: Desktop frontend build
 on:
   push:
-    branches: [main]
+    branches: [main, feature/premium-home-dashboard]
   pull_request:
     branches: [main, feature/photo-studio-dark-workspace-clean]
 jobs:
