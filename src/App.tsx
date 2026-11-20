@@ -2,6 +2,7 @@ import PhotoStudio from "./PhotoStudio";
 import brandAvatar from "./assets/tanshu-online-dp.jpg";
 import PDFMaster from "./PDFMaster";
 import ToolWorkspaces from "./ToolWorkspaces";
+import HomeDashboard from "./HomeDashboard";
 import { useMemo, useState } from "react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
@@ -129,37 +130,7 @@ function App() {
             <section className="module-placeholder"><div className="eyebrow">YOUR WORK</div><h1>My projects</h1><p className="module-lead">Your saved TANSHU ONLINE projects will appear here.</p><div className="empty-projects"><FolderOpen size={30}/><strong>No projects yet</strong><span>Start with a tool to create your first project.</span><button className="button-primary" onClick={() => setActiveNav("All tools")}>Explore tools <ArrowUpRight size={16}/></button></div></section>
           ) : (
             <>
-              <section className="welcome-row">
-                <div>
-                  <div className="eyebrow"><span className="eyebrow-line"/> YOUR WORKSPACE, READY</div>
-                  <h1>Good work starts <span>here.</span></h1>
-                  <p className="welcome-copy">Everything you need for your studio and daily work, in one place.</p>
-                </div>
-                <div className="welcome-art" aria-hidden="true"><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-core"><Command size={34}/></div><span className="art-spark spark-a">✳</span><span className="art-spark spark-b">✦</span></div>
-              </section>
-
-              <section className="quick-start">
-                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Auto Passport Photo Maker</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
-                <button className="button-light" onClick={() => openModule("Auto Passport Photo Maker")}>Open Auto Passport Photo Maker <ArrowUpRight size={16}/></button>
-                <div className="quick-glow"/>
-              </section>
-
-              <section className="tools-section">
-                <div className="section-heading">
-                  <div><div className="eyebrow">THE TOOLKIT</div><h2>{activeNav === "All tools" ? "All tools" : "Explore your tools"}</h2><p>Purpose-built tools for your everyday work.</p></div>
-                  <label className="search-box"><Search size={17}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find a tool..." /><kbd>⌘ K</kbd></label>
-                </div>
-                <div className="tool-grid">
-                  {filteredModules.map(({ title, description, icon: Icon, tone, group }) => (
-                    <button className="tool-card" key={title} onClick={() => openModule(title)}>
-                      <div className="tool-card-top"><div className={`tool-icon tone-${tone}`}><Icon size={20}/></div><ArrowUpRight className="card-arrow" size={17}/></div>
-                      <div className="tool-card-text"><h3>{title}</h3><p>{description}</p></div>
-                      <div className="tool-card-foot"><span>{group}</span><ChevronRight size={14}/></div>
-                    </button>
-                  ))}
-                </div>
-                {filteredModules.length === 0 && <div className="no-results">No tools match “{query}”. Try another search.</div>}
-              </section>
+              <HomeDashboard modules={modules} activeNav={activeNav} onOpenModule={openModule} />
 
               <footer className="page-footer"><span>© 2026 TANSHU ONLINE</span><span><ShieldCheck size={13}/> Independent · Offline-first · Local by design</span></footer>
             </>
