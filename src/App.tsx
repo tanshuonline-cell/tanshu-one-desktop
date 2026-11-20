@@ -4,6 +4,7 @@ import PDFMaster from "./PDFMaster";
 import ToolWorkspaces from "./ToolWorkspaces";
 import HomeDashboard from "./HomeDashboard";
 import { useState } from "react";
+import type { LucideIcon } from "lucide-react";
 import {
   Aperture, ArrowUpRight, BadgeIndianRupee, BriefcaseBusiness,
   Calculator, ChevronDown, ChevronRight, CircleHelp,
@@ -16,7 +17,7 @@ import {
 type ModuleItem = {
   title: string;
   description: string;
-  icon: typeof Aperture;
+  icon: LucideIcon;
   group: string;
   tone: string;
   status?: string;
