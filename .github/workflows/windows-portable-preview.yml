@@ -1,6 +1,8 @@
 name: Windows portable preview (screenshots)
 
 on:
+  push:
+    branches: [feature/premium-home-dashboard]
   pull_request:
     branches: [main, feature/photo-studio-dark-workspace-clean]
   workflow_dispatch:
@@ -41,11 +43,11 @@ jobs:
           Copy-Item $exe (Join-Path $folder 'TANSHU-ONLINE.exe')
           @'
           TANSHU ONLINE - Windows preview
-          
+
           1. Extract this ZIP to a normal folder on your Windows 11 PC.
           2. Double-click TANSHU-ONLINE.exe.
           3. If Windows shows a security warning, do not bypass Smart App Control or disable Windows security. Stop and contact the developer.
-          
+
           This is an unsigned preview build, not the Microsoft Store package.
           WebView2 Runtime is required (normally included with Windows 11).
           '@ | Set-Content -Path (Join-Path $folder 'README.txt') -Encoding UTF8
