@@ -432,6 +432,25 @@
   opacity: .9;
   transform: scale(1.65);
 }
+.photo-studio .ps-quick-tools button:active::after,
+.photo-studio .ps-unified-actions .ps-tool:active::after,
+.photo-studio .ps-tools-drawer button:active::after,
+.photo-studio .ps-sheet-floating-actions button:active::after,
+.photo-studio .ps-right-panel button:active::after {
+  opacity: 1;
+  animation: ps-contained-ripple .58s ease-out;
+}
+@keyframes ps-contained-ripple {
+  0% { opacity: .9; transform: scale(.2); }
+  65% { opacity: .55; transform: scale(1.35); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+.photo-studio .ps-right-panel .ps-prop-section:has(button:hover, input:hover, select:hover, textarea:hover),
+.photo-studio .ps-right-panel .ps-prop-section:has(button:focus-visible, input:focus, select:focus, textarea:focus) {
+  background: linear-gradient(110deg, rgba(213,161,93,.055), transparent 78%);
+  box-shadow: inset 2px 0 rgba(213,161,93,.35);
+  transition: background .22s ease, box-shadow .22s ease;
+}
 .photo-studio .ps-quick-tools button:active,
 .photo-studio .ps-unified-actions .ps-tool:active,
 .photo-studio .ps-tools-drawer button:active,
