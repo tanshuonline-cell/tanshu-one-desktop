@@ -2,7 +2,7 @@ name: Windows portable preview (screenshots)
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, feature/photo-studio-dark-workspace-clean]
   workflow_dispatch:
 
 permissions:
