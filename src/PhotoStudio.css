@@ -326,3 +326,15 @@
 .ps-sheet-floating-actions .ps-inline-control option{background:#29231e;color:#f0d6b7}
 .ps-sheet-floating-actions .ps-orientation-control{width:70px}
 .ps-sheet-floating-actions .ps-merge-count-control{width:72px}
+
+/* Premium first-open empty preview — scoped only to a blank page */
+.ps-canvas-scroll.is-empty{align-items:center;justify-content:center;padding:24px;overscroll-behavior:contain}
+.ps-paper.ps-paper-empty{background:transparent!important;border:1px dashed #4b555e;box-shadow:none!important;overflow:visible}
+.ps-paper-empty .ps-empty-page{inset:0;background:transparent;gap:13px;color:#aeb7bf}
+.ps-paper-empty .ps-empty-icon{width:44px;height:44px;border-radius:12px;background:#262d33;border:1px solid #3b444c;color:#c4cdd5}
+.ps-paper-empty .ps-empty-page strong{font-size:12px;color:#e4e9ed;font-weight:650}
+.ps-paper-empty .ps-empty-page span{font-size:9px;color:#9ba6b0;letter-spacing:.01em}
+.ps-paper-empty .ps-empty-page button{height:31px;margin-top:2px;padding:0 13px;display:flex;align-items:center;gap:7px;border:1px solid #514638;border-radius:7px;background:#292621;color:#f0d4b2;font-size:9px;transition:background .15s,border-color .15s}
+.ps-paper-empty .ps-empty-page button:hover{background:#3a3026;border-color:#8a6947}
+.ps-workspace:has(.ps-paper-empty){position:relative}
+.ps-workspace:has(.ps-paper-empty)::after{content:"PREVIEW AREA";position:absolute;right:12px;top:10px;z-index:2;padding:8px 11px;border:1px solid #343d44;border-radius:6px;background:#20262b;color:#9ba8b2;font-size:8px;letter-spacing:.08em;pointer-events:none}
