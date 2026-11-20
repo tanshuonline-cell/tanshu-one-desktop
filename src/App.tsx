@@ -1,4 +1,5 @@
 import PhotoStudio from "./PhotoStudio";
+import brandAvatar from "./assets/tanshu-online-dp.jpg";
 import PDFMaster from "./PDFMaster";
 import ToolWorkspaces from "./ToolWorkspaces";
 import { useMemo, useState } from "react";
@@ -21,8 +22,10 @@ type ModuleItem = {
 };
 
 const modules: ModuleItem[] = [
-  { title: "Photo Studio", description: "Passport photos, print sheets and image editing", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
+  { title: "Auto Passport Photo Maker", description: "Automatic passport photo layouts, print sheets and photo preparation", icon: Aperture, group: "Creative Studio", tone: "cyan", status: "Start creating" },
+  { title: "Manual Passport Photo Maker", description: "A separate hands-on photo editing workspace", icon: Aperture, group: "Creative Studio", tone: "violet", status: "Separate workspace" },
   { title: "PVC & ID Studio", description: "Design cards, front and back layouts", icon: CreditCard, group: "Creative Studio", tone: "violet" },
+  { title: "Photo Studio", description: "A separate workspace for detailed photo editing", icon: FileImage, group: "Creative Studio", tone: "blue", status: "Planned workspace" },
   { title: "PDF Master", description: "Merge PDFs, extract pages and rotate documents", icon: FileText, group: "Documents", tone: "coral" },
   { title: "Document Studio", description: "Prepare clean documents for print", icon: FileImage, group: "Documents", tone: "blue" },
   { title: "Image & File Tools", description: "Resize and convert images locally", icon: FolderOpen, group: "Documents", tone: "green" },
@@ -45,7 +48,7 @@ function App() {
   const [activeNav, setActiveNav] = useState("Overview");
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedModule, setSelectedModule] = useState<string | null>(null);
+  const [selectedModule, setSelectedModule] = useState<string | null>(() => { try { const key = "tanshu-online-auto-passport-first-open"; if (!window.localStorage.getItem(key)) { window.localStorage.setItem(key, "1"); return "Auto Passport Photo Maker"; } } catch { return "Auto Passport Photo Maker"; } return null; });
   const [showHelp, setShowHelp] = useState(false);
 
   const filteredModules = useMemo(
@@ -56,7 +59,7 @@ function App() {
   const openModule = (title: string) => setSelectedModule(title);
   const selected = modules.find((item) => item.title === selectedModule);
 
-  if (selectedModule === "Photo Studio") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
+  if (selectedModule === "Auto Passport Photo Maker") return <PhotoStudio onBack={() => setSelectedModule(null)} />;
   if (selectedModule === "PDF Master") return <PDFMaster onBack={() => setSelectedModule(null)} />;
   if (selectedModule && selectedModule !== "Settings") return <ToolWorkspaces moduleName={selectedModule} onBack={() => setSelectedModule(null)} />;
 
@@ -64,14 +67,14 @@ function App() {
     <div className="app-shell">
       <aside className={`sidebar ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
         <div className="brand-lockup">
-          <div className="brand-mark"><Command size={22} strokeWidth={2.2} /></div>
-          {sidebarOpen && <div className="brand-copy"><strong>TANSHU<span> ONE</span></strong><small>DESKTOP WORKSPACE</small></div>}
+          <img className="brand-avatar" src={brandAvatar} alt="TANSHU ONLINE" />
+          {sidebarOpen && <div className="brand-copy"><strong>TANSHU<span> ONLINE</span></strong><small>DESKTOP WORKSPACE</small></div>}
           <button className="icon-button sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Toggle sidebar">
             {sidebarOpen ? <PanelLeftClose size={17} /> : <Menu size={18} />}
           </button>
         </div>
 
-        {sidebarOpen && <div className="workspace-switch"><div className="workspace-avatar">T</div><div><strong>My Workspace</strong><small>Local device</small></div><ChevronDown size={15} /></div>}
+        {sidebarOpen && <div className="workspace-switch"><img className="workspace-avatar workspace-avatar-photo" src={brandAvatar} alt="" /><div><strong>My Workspace</strong><small>Local device</small></div><ChevronDown size={15} /></div>}
 
         <div className="nav-caption">{sidebarOpen ? "WORKSPACE" : ""}</div>
         <nav className="primary-nav">
@@ -105,12 +108,12 @@ function App() {
           <div className="topbar-actions">
             <div className="system-status"><span className="status-dot"/> Local workspace</div>
             <button className="icon-button help-button" onClick={() => setShowHelp(true)} aria-label="Help"><CircleHelp size={18}/></button>
-            <div className="profile-chip"><div className="profile-avatar">T</div><ChevronDown size={14}/></div>
+            <div className="profile-chip"><img className="profile-avatar profile-avatar-photo" src={brandAvatar} alt="TANSHU ONLINE profile" /><ChevronDown size={14}/></div>
           </div>
         </header>
 
         <div className="page-content">
-          {selectedModule === "Photo Studio" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
+          {selectedModule === "Auto Passport Photo Maker" ? <PhotoStudio onBack={() => setSelectedModule(null)} /> : selectedModule ? (
             <section className="module-placeholder">
               <button className="back-link" onClick={() => setSelectedModule(null)}>← Back to workspace</button>
               <div className={`module-hero-icon tone-${selected?.tone ?? "cyan"}`}>{selected && <selected.icon size={30}/>}</div>
@@ -136,8 +139,8 @@ function App() {
               </section>
 
               <section className="quick-start">
-                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Photo Studio</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
-                <button className="button-light" onClick={() => openModule("Photo Studio")}>Open studio <ArrowUpRight size={16}/></button>
+                <div className="quick-copy"><div className="quick-icon"><Aperture size={22}/></div><div><span className="quick-kicker">READY WHEN YOU ARE</span><h2>Open Auto Passport Photo Maker</h2><p>Set up photos, arrange print sheets and prepare your work.</p></div></div>
+                <button className="button-light" onClick={() => openModule("Auto Passport Photo Maker")}>Open Auto Passport Photo Maker <ArrowUpRight size={16}/></button>
                 <div className="quick-glow"/>
               </section>
 
