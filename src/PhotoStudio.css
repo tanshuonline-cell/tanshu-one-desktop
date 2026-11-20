@@ -321,3 +321,8 @@
 .ps-document-delete{display:grid;place-items:center;align-self:center;width:27px;height:27px;border:1px solid transparent;border-radius:5px;background:transparent;color:#b9a18a;cursor:pointer}
 .ps-document-delete:hover{border-color:#a94e45;background:#542c27;color:#ffd5cb}
 .ps-document-delete:focus-visible,.ps-document-select:focus-visible{outline:2px solid #e3ad6b;outline-offset:1px}
+
+.ps-sheet-floating-actions .ps-inline-control{height:19px;min-width:0;max-width:88px;padding:0 4px;border:1px solid #6a5847;border-radius:4px;background:#29231e;color:#f0d6b7;font-size:8px;line-height:1;outline:none}
+.ps-sheet-floating-actions .ps-inline-control option{background:#29231e;color:#f0d6b7}
+.ps-sheet-floating-actions .ps-orientation-control{width:70px}
+.ps-sheet-floating-actions .ps-merge-count-control{width:72px}
