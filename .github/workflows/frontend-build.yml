@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, feature/photo-studio-dark-workspace-clean]
 jobs:
   frontend:
     runs-on: ubuntu-latest

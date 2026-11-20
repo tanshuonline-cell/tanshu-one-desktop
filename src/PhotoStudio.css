@@ -384,3 +384,126 @@
 .ps-signature-note{display:block;margin-top:7px;color:#7d8a97;font-size:9px;line-height:1.5}
 
 .ps-sheet-spacing-grid label{flex-direction:column;align-items:stretch;gap:5px}
+
+
+/* Premium, contained interaction feedback for tools and settings */
+.photo-studio .ps-quick-tools button,
+.photo-studio .ps-unified-actions .ps-tool,
+.photo-studio .ps-tools-drawer button,
+.photo-studio .ps-sheet-floating-actions button,
+.photo-studio .ps-right-panel button,
+.photo-studio .ps-right-panel input,
+.photo-studio .ps-right-panel select,
+.photo-studio .ps-right-panel textarea,
+.photo-studio .ps-tools-drawer input,
+.photo-studio .ps-tools-drawer select {
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .24s ease, transform .24s ease;
+}
+.photo-studio .ps-quick-tools button,
+.photo-studio .ps-unified-actions .ps-tool,
+.photo-studio .ps-tools-drawer button,
+.photo-studio .ps-sheet-floating-actions button,
+.photo-studio .ps-right-panel button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.photo-studio .ps-quick-tools button::after,
+.photo-studio .ps-unified-actions .ps-tool::after,
+.photo-studio .ps-tools-drawer button::after,
+.photo-studio .ps-sheet-floating-actions button::after,
+.photo-studio .ps-right-panel button::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.25) 0, rgba(255,255,255,.11) 18%, transparent 68%);
+  transform: scale(.18);
+  transition: opacity .22s ease, transform .42s cubic-bezier(.16,.8,.25,1);
+}
+.photo-studio .ps-quick-tools button:hover::after,
+.photo-studio .ps-unified-actions .ps-tool:hover::after,
+.photo-studio .ps-tools-drawer button:hover::after,
+.photo-studio .ps-sheet-floating-actions button:hover::after,
+.photo-studio .ps-right-panel button:hover::after {
+  opacity: .9;
+  transform: scale(1.65);
+}
+.photo-studio .ps-quick-tools button:active::after,
+.photo-studio .ps-unified-actions .ps-tool:active::after,
+.photo-studio .ps-tools-drawer button:active::after,
+.photo-studio .ps-sheet-floating-actions button:active::after,
+.photo-studio .ps-right-panel button:active::after {
+  opacity: 1;
+  animation: ps-contained-ripple .58s ease-out;
+}
+@keyframes ps-contained-ripple {
+  0% { opacity: .9; transform: scale(.2); }
+  65% { opacity: .55; transform: scale(1.35); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+.photo-studio .ps-right-panel .ps-prop-section:has(button:hover, input:hover, select:hover, textarea:hover),
+.photo-studio .ps-right-panel .ps-prop-section:has(button:focus-visible, input:focus, select:focus, textarea:focus) {
+  background: linear-gradient(110deg, rgba(213,161,93,.055), transparent 78%);
+  box-shadow: inset 2px 0 rgba(213,161,93,.35);
+  transition: background .22s ease, box-shadow .22s ease;
+}
+.photo-studio .ps-quick-tools button:active,
+.photo-studio .ps-unified-actions .ps-tool:active,
+.photo-studio .ps-tools-drawer button:active,
+.photo-studio .ps-sheet-floating-actions button:active,
+.photo-studio .ps-right-panel button:active {
+  transform: scale(.965);
+}
+.photo-studio .ps-right-panel input:hover,
+.photo-studio .ps-right-panel select:hover,
+.photo-studio .ps-right-panel textarea:hover,
+.photo-studio .ps-tools-drawer input:hover,
+.photo-studio .ps-tools-drawer select:hover {
+  border-color: #a67a4e;
+  box-shadow: inset 0 0 0 1px rgba(213,161,93,.12), 0 0 0 2px rgba(213,161,93,.08);
+}
+.photo-studio .ps-right-panel input:focus,
+.photo-studio .ps-right-panel select:focus,
+.photo-studio .ps-right-panel textarea:focus,
+.photo-studio .ps-tools-drawer input:focus,
+.photo-studio .ps-tools-drawer select:focus {
+  outline: none;
+  border-color: #d5a15d;
+  box-shadow: inset 0 0 0 1px rgba(213,161,93,.18), 0 0 0 3px rgba(213,161,93,.13);
+}
+.photo-studio .ps-quick-tools button.ps-tool-import svg { color: #63b9ed; }
+.photo-studio .ps-quick-tools button.ps-tool-move svg { color: #78c5a2; }
+.photo-studio .ps-quick-tools button.ps-tool-crop svg { color: #d6a45c; }
+.photo-studio .ps-quick-tools button.ps-tool-sign svg { color: #c58be8; }
+.photo-studio .ps-quick-tools button.ps-tool-shape svg { color: #e0b85e; }
+.photo-studio .ps-quick-tools button.ps-tool-bg svg { color: #55c7b2; }
+.photo-studio .ps-quick-tools button.ps-tool-delete svg { color: #f07878; }
+.photo-studio .ps-quick-tools button.ps-tool-delete:hover,
+.photo-studio .ps-quick-tools button.ps-tool-delete.active {
+  background: rgba(174,45,53,.22);
+  border-color: rgba(239,104,112,.62);
+  color: #ffd8d8;
+  box-shadow: inset 0 0 0 1px rgba(239,104,112,.12), 0 0 14px rgba(220,65,75,.12);
+}
+.photo-studio .ps-bg-tool-icon { position: relative; width: 22px; height: 20px; display: inline-grid; place-items: center; }
+.photo-studio .ps-bg-tool-icon svg:first-child { position: absolute; left: 0; top: 1px; }
+.photo-studio .ps-bg-tool-icon svg:last-child { position: absolute; right: -1px; bottom: 0; padding: 1px; border-radius: 50%; background: #191715; color: #f0bd65; }
+.photo-studio .ps-quick-tools button.ps-tool-bg:hover,
+.photo-studio .ps-quick-tools button.ps-tool-bg.active { background: rgba(48,151,139,.18); border-color: rgba(83,199,178,.52); color: #c9fff2; }
+.photo-studio .ps-quick-tools button.ps-tool-delete::after { background: radial-gradient(circle at 50% 50%, rgba(255,105,105,.32), rgba(255,105,105,.12) 22%, transparent 68%); }
+@media (prefers-reduced-motion: reduce) {
+  .photo-studio .ps-quick-tools button,
+  .photo-studio .ps-unified-actions .ps-tool,
+  .photo-studio .ps-tools-drawer button,
+  .photo-studio .ps-sheet-floating-actions button,
+  .photo-studio .ps-right-panel button,
+  .photo-studio .ps-right-panel input,
+  .photo-studio .ps-right-panel select,
+  .photo-studio .ps-right-panel textarea,
+  .photo-studio .ps-tools-drawer input,
+  .photo-studio .ps-tools-drawer select { transition: none !important; }
+}
